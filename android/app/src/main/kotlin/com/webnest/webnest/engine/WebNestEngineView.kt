@@ -256,6 +256,16 @@ class WebNestEngineView(
                 super.onPageFinished(view, url)
                 methodChannel.invokeMethod("onPageFinished", mapOf("url" to url))
             }
+
+            override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
+                super.doUpdateVisitedHistory(view, url, isReload)
+                view?.let {
+                    methodChannel.invokeMethod(
+                        "onHistoryChanged",
+                        mapOf("canGoBack" to it.canGoBack(), "canGoForward" to it.canGoForward())
+                    )
+                }
+            }
         }
 
         // ── Chrome client ─────────────────────────────────────────────────────

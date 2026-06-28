@@ -46,6 +46,7 @@ class WebEngineView extends StatefulWidget {
   final Future<bool> Function(String origin, List<String> resources)? onPermissionRequest;
   final Future<bool> Function(String origin)? onGeolocationPermission;
   final ValueChanged<WebEngineChannel>? onChannelCreated;
+  final void Function(bool canGoBack, bool canGoForward)? onHistoryChanged;
 
   const WebEngineView({
     super.key,
@@ -74,6 +75,7 @@ class WebEngineView extends StatefulWidget {
     this.onPermissionRequest,
     this.onGeolocationPermission,
     this.onChannelCreated,
+    this.onHistoryChanged,
   });
 
   @override
@@ -101,6 +103,7 @@ class _WebEngineViewState extends State<WebEngineView> {
     channel.onExitFullscreen = widget.onExitFullscreen;
     channel.onPermissionRequest = widget.onPermissionRequest;
     channel.onGeolocationPermission = widget.onGeolocationPermission;
+    channel.onHistoryChanged = widget.onHistoryChanged;
 
     widget.onChannelCreated?.call(channel);
   }

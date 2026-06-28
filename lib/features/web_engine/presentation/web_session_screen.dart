@@ -1,4 +1,4 @@
-﻿
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,6 +56,7 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
   double _splashOpacity = 1.0;
   int _blockedCount = 0;
   bool _isFullscreen = false;
+  bool _canGoBack = false;
 
   Timer? _refreshTimer;
   WebEngineChannel? _channel;
@@ -412,7 +413,15 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
 
     // Fullscreen: bare scaffold with no system UI
     if (_isFullscreen) {
-      return Scaffold(
+      return PopScope(
+        canPop: !_canGoBack,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return;
+          if (_canGoBack) {
+            _channel?.goBack();
+          }
+        },
+        child: Scaffold(
         backgroundColor: Colors.black,
         body: Stack(
           children: [
@@ -462,6 +471,13 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
                       systemNavigationBarIconBrightness: Brightness.light,
                     ));
                   },
+                  onHistoryChanged: (canGoBack, canGoForward) {
+                    if (mounted && _canGoBack != canGoBack) {
+                      setState(() {
+                        _canGoBack = canGoBack;
+                      });
+                    }
+                  },
                   onChannelCreated: (ch) => _channel = ch,
                   onPermissionRequest: (origin, resources) async {
                     final perms = ref.read(permissionsProvider.notifier);
@@ -492,11 +508,19 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
             ),
           ],
         ),
-      );
+      ));
     }
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+    return PopScope(
+      canPop: !_canGoBack,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (_canGoBack) {
+          _channel?.goBack();
+        }
+      },
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: const SystemUiOverlayStyle(
         statusBarColor: Colors.black,
         statusBarIconBrightness: Brightness.light,
         systemNavigationBarColor: Colors.black,
@@ -580,6 +604,13 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
                         systemNavigationBarColor: Colors.black,
                         systemNavigationBarIconBrightness: Brightness.light,
                       ));
+                    },
+                    onHistoryChanged: (canGoBack, canGoForward) {
+                      if (mounted && _canGoBack != canGoBack) {
+                        setState(() {
+                          _canGoBack = canGoBack;
+                        });
+                      }
                     },
                     onPermissionRequest: (origin, resources) async {
                       final perms = ref.read(permissionsProvider.notifier);
@@ -754,7 +785,7 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
           ),
         ),
       ),
-    );
+    ));
   }
 }
 

@@ -13,6 +13,7 @@ class WebEngineChannel {
   void Function()? onExitFullscreen;
   Future<bool> Function(String origin, List<String> resources)? onPermissionRequest;
   Future<bool> Function(String origin)? onGeolocationPermission;
+  void Function(bool canGoBack, bool canGoForward)? onHistoryChanged;
 
   WebEngineChannel(this.viewId) {
     _channel = MethodChannel('com.webnest/engine_$viewId');
@@ -21,6 +22,13 @@ class WebEngineChannel {
 
   Future<dynamic> _handleMethodCall(MethodCall call) async {
     switch (call.method) {
+      case 'onHistoryChanged':
+        final canGoBack = call.arguments['canGoBack'] as bool?;
+        final canGoForward = call.arguments['canGoForward'] as bool?;
+        if (canGoBack != null && canGoForward != null) {
+          onHistoryChanged?.call(canGoBack, canGoForward);
+        }
+        break;
       case 'onProgressChanged':
         final progress = call.arguments['progress'] as int?;
         if (progress != null) {
