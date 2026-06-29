@@ -28,7 +28,7 @@ class AppSettingsNotifier extends StateNotifier<AppSettings> {
     await _prefs.setString(_key, jsonEncode(state.toJson()));
   }
 
-  Future<void> setTwoFingerReload(bool value) async {
+  Future<void> setTwoFingerReloadEnabled(bool value) async {
     state = state.copyWith(twoFingerReloadEnabled: value);
     await _save();
   }
@@ -93,11 +93,6 @@ class AppSettingsNotifier extends StateNotifier<AppSettings> {
     await _save();
   }
 
-  Future<void> setCustomDns(String value) async {
-    state = state.copyWith(customDnsServer: value);
-    await _save();
-  }
-
   Future<void> setUserAgentMode(UserAgentMode value) async {
     state = state.copyWith(userAgentMode: value);
     await _save();
@@ -135,11 +130,6 @@ class AppSettingsNotifier extends StateNotifier<AppSettings> {
 
   Future<void> setOpenLinksExternally(bool value) async {
     state = state.copyWith(openLinksExternally: value);
-    await _save();
-  }
-
-  Future<void> setTwoFingerReloadEnabled(bool value) async {
-    state = state.copyWith(twoFingerReloadEnabled: value);
     await _save();
   }
 

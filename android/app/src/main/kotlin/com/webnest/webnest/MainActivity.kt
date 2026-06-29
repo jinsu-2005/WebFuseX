@@ -238,6 +238,16 @@ class MainActivity : FlutterActivity() {
                         result.error("BAD_ARGS", "URL is empty", null)
                     }
                 }
+                "openNetworkSettings" -> {
+                    try {
+                        val intent = Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        result.success(true)
+                    } catch (e: Exception) {
+                        result.error("ERROR", e.localizedMessage, null)
+                    }
+                }
                 else -> result.notImplemented()
             }
         }

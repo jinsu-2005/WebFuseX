@@ -26,7 +26,6 @@ class AppSettings {
 
   // ── Network ───────────────────────────────────────────────────────────────────
   final DnsMode dnsMode;
-  final String customDnsServer;
   final UserAgentMode userAgentMode;
   final String customUserAgent;
 
@@ -68,7 +67,6 @@ class AppSettings {
     this.adBlockerEnabled = true,
     this.filterListsLastUpdated,
     this.dnsMode = DnsMode.system,
-    this.customDnsServer = '',
     this.userAgentMode = UserAgentMode.defaultAgent,
     this.customUserAgent = '',
     this.downloadLocation = '',
@@ -101,7 +99,6 @@ class AppSettings {
     bool? adBlockerEnabled,
     DateTime? filterListsLastUpdated,
     DnsMode? dnsMode,
-    String? customDnsServer,
     UserAgentMode? userAgentMode,
     String? customUserAgent,
     String? downloadLocation,
@@ -140,7 +137,6 @@ class AppSettings {
       filterListsLastUpdated:
           filterListsLastUpdated ?? this.filterListsLastUpdated,
       dnsMode: dnsMode ?? this.dnsMode,
-      customDnsServer: customDnsServer ?? this.customDnsServer,
       userAgentMode: userAgentMode ?? this.userAgentMode,
       customUserAgent: customUserAgent ?? this.customUserAgent,
       downloadLocation: downloadLocation ?? this.downloadLocation,
@@ -176,7 +172,6 @@ class AppSettings {
         'adBlockerEnabled': adBlockerEnabled,
         'filterListsLastUpdated': filterListsLastUpdated?.toIso8601String(),
         'dnsMode': dnsMode.name,
-        'customDnsServer': customDnsServer,
         'userAgentMode': userAgentMode.name,
         'customUserAgent': customUserAgent,
         'downloadLocation': downloadLocation,
@@ -223,7 +218,6 @@ class AppSettings {
           (e) => e.name == json['dnsMode'],
           orElse: () => DnsMode.system,
         ),
-        customDnsServer: json['customDnsServer'] as String? ?? '',
         userAgentMode: UserAgentMode.values.firstWhere(
           (e) => e.name == json['userAgentMode'],
           orElse: () => UserAgentMode.defaultAgent,
@@ -258,6 +252,6 @@ class AppSettings {
 
 enum AppDefaultMode { mobile, desktop }
 
-enum DnsMode { system, custom }
+enum DnsMode { system, adguard, adguardFamily }
 
 enum UserAgentMode { defaultAgent, desktop, custom }

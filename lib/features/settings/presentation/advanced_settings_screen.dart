@@ -186,7 +186,6 @@ class _AdvancedSettingsScreenState
   }
 
   void _showDnsDialog(AppSettings settings) {
-    final customDnsCtrl = TextEditingController(text: settings.customDnsServer);
     DnsMode selected = settings.dnsMode;
 
     showDialog(
@@ -221,88 +220,122 @@ class _AdvancedSettingsScreenState
                 ),
                 RadioListTile<DnsMode>(
                   title: const Text(
-                    'Custom DNS',
+                    'AdGuard DNS',
                     style: TextStyle(color: Colors.white),
                   ),
                   subtitle: const Text(
-                    'Enter custom DNS server address',
+                    'Blocks ads, trackers, and phishing',
                     style: TextStyle(color: Colors.white54, fontSize: 12),
                   ),
-                  value: DnsMode.custom,
+                  value: DnsMode.adguard,
                   groupValue: selected,
                   activeColor: const Color(0xFF818CF8),
                   onChanged: (v) => setDialogState(() => selected = v!),
                 ),
-                if (selected == DnsMode.custom)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
-                    child: TextField(
-                      controller: customDnsCtrl,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: 'e.g. 1.1.1.1',
-                        hintStyle: const TextStyle(color: Colors.white30),
-                        filled: true,
-                        fillColor: Colors.white.withValues(alpha: 0.06),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 10,
-                        ),
-                      ),
-                    ),
+                RadioListTile<DnsMode>(
+                  title: const Text(
+                    'AdGuard Family',
+                    style: TextStyle(color: Colors.white),
                   ),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.amber.withValues(alpha: 0.25),
-                    ),
+                  subtitle: const Text(
+                    'Blocks ads + adult content',
+                    style: TextStyle(color: Colors.white54, fontSize: 12),
                   ),
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.info_outline,
-                            color: Colors.amberAccent,
-                            size: 16,
-                          ),
-                          SizedBox(width: 8),
-                          Text(
-                            'Android WebView Limitation',
-                            style: TextStyle(
-                              color: Colors.amberAccent,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Android WebView does not support changing DNS servers inside a single app. '
-                        'To use custom or AdGuard DNS, configure it in Android System Settings:\n\n'
-                        '1. Open Settings -> Network & Internet\n'
-                        '2. Tap Private DNS\n'
-                        '3. Select Private DNS provider hostname\n'
-                        '4. Enter: dns.adguard.com (or your provider)',
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: 11,
-                          height: 1.4,
-                        ),
-                      ),
-                    ],
-                  ),
+                  value: DnsMode.adguardFamily,
+                  groupValue: selected,
+                  activeColor: const Color(0xFF818CF8),
+                  onChanged: (v) => setDialogState(() => selected = v!),
                 ),
+                if (selected != DnsMode.system)
+                  Container(
+                    margin: const EdgeInsets.only(top: 16),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.amber.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.amber.withValues(alpha: 0.25),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          children: [
+                            Icon(Icons.info_outline, color: Colors.amberAccent, size: 16),
+                            SizedBox(width: 8),
+                            Text(
+                              'Android Private DNS Required',
+                              style: TextStyle(
+                                color: Colors.amberAccent,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Android requires you to set this manually in your system settings.',
+                          style: TextStyle(color: Colors.white70, fontSize: 11, height: 1.4),
+                        ),
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.black26,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  selected == DnsMode.adguard
+                                      ? 'dns.adguard-dns.com'
+                                      : 'family.adguard-dns.com',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'monospace',
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                icon: const Icon(Icons.copy, color: Color(0xFF818CF8), size: 16),
+                                onPressed: () {
+                                  final hostname = selected == DnsMode.adguard
+                                      ? 'dns.adguard-dns.com'
+                                      : 'family.adguard-dns.com';
+                                  Clipboard.setData(ClipboardData(text: hostname));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Hostname copied!')),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF818CF8),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                            ),
+                            icon: const Icon(Icons.settings, size: 16),
+                            label: const Text('Open Android Network Settings', style: TextStyle(fontSize: 12)),
+                            onPressed: () {
+                              _nativeChannel.invokeMethod('openNetworkSettings');
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),
@@ -318,11 +351,6 @@ class _AdvancedSettingsScreenState
               onPressed: () {
                 Navigator.pop(ctx);
                 ref.read(appSettingsProvider.notifier).setDnsMode(selected);
-                if (selected == DnsMode.custom) {
-                  ref
-                      .read(appSettingsProvider.notifier)
-                      .setCustomDns(customDnsCtrl.text.trim());
-                }
               },
               child: const Text(
                 'Save',
@@ -463,7 +491,7 @@ class _AdvancedSettingsScreenState
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
-          // â”€â”€ Gestures â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+          // ── Gestures ──────────────────────────────────────────────────────────────────
           _SectionHeader('Gestures'),
           _SettingsTile(
             icon: Icons.touch_app_outlined,
@@ -472,13 +500,14 @@ class _AdvancedSettingsScreenState
             subtitle: 'Swipe down with two fingers to reload the current page',
             trailing: Switch(
               value: settings.twoFingerReloadEnabled,
-              onChanged: (v) =>
-                  ref.read(appSettingsProvider.notifier).setTwoFingerReload(v),
+              onChanged: (v) => ref
+                  .read(appSettingsProvider.notifier)
+                  .setTwoFingerReloadEnabled(v),
               activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
 
-          // â”€â”€ General Web Options â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+          // ── General Web Options ──────────────────────────────────────────────
           _SectionHeader('General Web Options'),
           _SettingsTile(
             icon: Icons.zoom_in_rounded,
@@ -816,9 +845,11 @@ class _AdvancedSettingsScreenState
             icon: Icons.dns_rounded,
             iconColor: Colors.lightBlueAccent,
             title: 'DNS Selection',
-            subtitle: settings.dnsMode == DnsMode.custom
-                ? 'Custom: ${settings.customDnsServer}'
-                : 'System DNS',
+            subtitle: settings.dnsMode == DnsMode.adguard
+                ? 'AdGuard DNS'
+                : settings.dnsMode == DnsMode.adguardFamily
+                    ? 'AdGuard Family'
+                    : 'System Default',
             trailing: const Icon(Icons.chevron_right, color: Colors.white38),
             onTap: () => _showDnsDialog(settings),
           ),
@@ -846,20 +877,6 @@ class _AdvancedSettingsScreenState
               activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
-          _SettingsTile(
-            icon: Icons.swipe_down_rounded,
-            iconColor: Colors.pinkAccent,
-            title: 'Two-Finger Reload',
-            subtitle: 'Swipe down with two fingers to reload page',
-            trailing: Switch(
-              value: settings.twoFingerReloadEnabled,
-              onChanged: (v) => ref
-                  .read(appSettingsProvider.notifier)
-                  .setTwoFingerReloadEnabled(v),
-              activeThumbColor: const Color(0xFF818CF8),
-            ),
-          ),
-
           // â”€â”€ Storage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
           _SectionHeader('Storage'),
           _SettingsTile(

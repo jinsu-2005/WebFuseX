@@ -470,6 +470,7 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
                   openLinksExternally: app.openLinksExternallyOverride ?? settings.openLinksExternally,
                   loadImagesEnabled: app.loadImagesEnabledOverride ?? settings.loadImagesEnabled,
                   twoFingerReloadEnabled: settings.twoFingerReloadEnabled,
+
                   onEnterFullscreen: () {
                     setState(() => _isFullscreen = true);
                     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
@@ -590,6 +591,7 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
                     openLinksExternally: app.openLinksExternallyOverride ?? settings.openLinksExternally,
                     loadImagesEnabled: app.loadImagesEnabledOverride ?? settings.loadImagesEnabled,
                     twoFingerReloadEnabled: settings.twoFingerReloadEnabled,
+
                     onProgressChanged: (progress) {
                       if (progress >= 100 && _isLoading) {
                         setState(() => _isLoading = false);

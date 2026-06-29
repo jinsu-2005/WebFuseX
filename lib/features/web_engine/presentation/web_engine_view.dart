@@ -33,6 +33,7 @@ class WebEngineView extends StatefulWidget {
   // ── Two-finger reload ───────────────────────────────────────────────────────
   final bool twoFingerReloadEnabled;
 
+
   // ── Background playback ─────────────────────────────────────────────────────
   final bool backgroundPlaybackEnabled;
 
@@ -93,6 +94,7 @@ class _WebEngineViewState extends State<WebEngineView> {
   bool _twoFingerReloaded = false;
   static const double _reloadThreshold = 80.0; // pixels down
 
+
   void _onPlatformViewCreated(int id) {
     final channel = WebEngineChannel(id);
     _channel = channel;
@@ -111,7 +113,7 @@ class _WebEngineViewState extends State<WebEngineView> {
     widget.onChannelCreated?.call(channel);
   }
 
-  // â”€â”€ Two-finger swipe gesture detection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Two-finger swipe gesture detection ──────────────────────────────────────
 
   void _onPointerDown(PointerDownEvent event) {
     _activePointers++;
@@ -179,20 +181,13 @@ class _WebEngineViewState extends State<WebEngineView> {
         onPointerMove: _onPointerMove,
         onPointerUp: _onPointerUp,
         onPointerCancel: _onPointerCancel,
+        behavior: HitTestBehavior.deferToChild,
         child: AndroidView(
           viewType: viewType,
           layoutDirection: TextDirection.ltr,
           creationParams: creationParams,
           creationParamsCodec: const StandardMessageCodec(),
           onPlatformViewCreated: _onPlatformViewCreated,
-          gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-            Factory<VerticalDragGestureRecognizer>(
-              () => VerticalDragGestureRecognizer(),
-            ),
-            Factory<HorizontalDragGestureRecognizer>(
-              () => HorizontalDragGestureRecognizer(),
-            ),
-          },
         ),
       );
     }

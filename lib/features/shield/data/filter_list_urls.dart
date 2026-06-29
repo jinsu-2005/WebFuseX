@@ -41,22 +41,6 @@ class FilterListUrls {
       enabled: true,
     ),
     FilterList(
-      id: 'adguard_base',
-      name: 'AdGuard Base',
-      url: adguardBase,
-      description: 'AdGuard primary ad-blocking filters',
-      license: 'GPL v3',
-      enabled: true,
-    ),
-    FilterList(
-      id: 'adguard_mobile',
-      name: 'AdGuard Mobile Ads',
-      url: adguardMobileAds,
-      description: 'Filters specific to mobile ad networks',
-      license: 'GPL v3',
-      enabled: true,
-    ),
-    FilterList(
       id: 'ublock_base',
       name: 'uBlock Base Filters',
       url: uBlockBase,
