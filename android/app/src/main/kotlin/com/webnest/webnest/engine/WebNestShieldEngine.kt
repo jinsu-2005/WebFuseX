@@ -30,12 +30,12 @@ object WebNestShieldEngine {
     /** Exact domain block rules: `||domain.com^` */
     private val blockedDomains = HashSet<String>()
 
-    /** Prefix URL block rules: `||domain.com/path` — stored as normalized strings */
-    private val blockedPrefixes = ArrayList<String>()
+    /** Prefix URL block rules: mapped by domain. Key = domain, Value = list of paths/prefixes */
+    private val blockedPrefixes = HashMap<String, ArrayList<String>>()
 
-    /** Exception / whitelist rules: `@@||domain.com^` */
+    /** Exception / whitelist rules */
     private val allowedDomains = HashSet<String>()
-    private val allowedPrefixes = ArrayList<String>()
+    private val allowedPrefixes = HashMap<String, ArrayList<String>>()
 
     // ── Synchronization ───────────────────────────────────────────────────────
 
@@ -60,7 +60,7 @@ object WebNestShieldEngine {
      */
     fun getRuleCount(): Int {
         return synchronized(lock) {
-            blockedDomains.size + blockedPrefixes.size
+            blockedDomains.size + blockedPrefixes.values.sumOf { it.size }
         }
     }
 
@@ -88,9 +88,9 @@ object WebNestShieldEngine {
     fun loadFromStream(inputStream: InputStream) {
         val reader = BufferedReader(InputStreamReader(inputStream, Charsets.UTF_8))
         val newDomains = HashSet<String>()
-        val newPrefixes = ArrayList<String>()
+        val newPrefixes = HashMap<String, ArrayList<String>>()
         val newAllowedDomains = HashSet<String>()
-        val newAllowedPrefixes = ArrayList<String>()
+        val newAllowedPrefixes = HashMap<String, ArrayList<String>>()
 
         reader.use { r ->
             r.forEachLine { rawLine ->
@@ -107,18 +107,22 @@ object WebNestShieldEngine {
 
         synchronized(lock) {
             blockedDomains.addAll(newDomains)
-            blockedPrefixes.addAll(newPrefixes)
+            for ((k, v) in newPrefixes) {
+                blockedPrefixes.getOrPut(k) { ArrayList() }.addAll(v)
+            }
             allowedDomains.addAll(newAllowedDomains)
-            allowedPrefixes.addAll(newAllowedPrefixes)
+            for ((k, v) in newAllowedPrefixes) {
+                allowedPrefixes.getOrPut(k) { ArrayList() }.addAll(v)
+            }
         }
     }
 
     private fun parseRule(
         line: String,
         domains: HashSet<String>,
-        prefixes: ArrayList<String>,
+        prefixes: HashMap<String, ArrayList<String>>,
         allowedDomains: HashSet<String>,
-        allowedPrefixes: ArrayList<String>,
+        allowedPrefixes: HashMap<String, ArrayList<String>>,
     ) {
         // Skip blank lines, comments, section headers, and cosmetic rules
         if (line.isEmpty() || line.startsWith('!') || line.startsWith('[') ||
@@ -157,8 +161,12 @@ object WebNestShieldEngine {
             else domains.add(normalizedRule)
         } else {
             // URL prefix: `||example.com/path/to/ads`
-            if (isException) allowedPrefixes.add(normalizedRule)
-            else prefixes.add(normalizedRule)
+            val domainPart = urlPart.substring(0, slashIdx).lowercase()
+            if (isException) {
+                allowedPrefixes.getOrPut(domainPart) { ArrayList() }.add(normalizedRule)
+            } else {
+                prefixes.getOrPut(domainPart) { ArrayList() }.add(normalizedRule)
+            }
         }
     }
 
@@ -198,12 +206,12 @@ object WebNestShieldEngine {
     private fun isAllowed(host: String, fullUrl: String): Boolean {
         if (allowedDomains.isEmpty() && allowedPrefixes.isEmpty()) return false
         if (matchesDomain(host, allowedDomains)) return true
-        return allowedPrefixes.any { fullUrl.startsWith(it) }
+        return matchesPrefixes(host, fullUrl, allowedPrefixes)
     }
 
     private fun isBlocked(host: String, fullUrl: String): Boolean {
         if (matchesDomain(host, blockedDomains)) return true
-        return blockedPrefixes.any { fullUrl.startsWith(it) }
+        return matchesPrefixes(host, fullUrl, blockedPrefixes)
     }
 
     /**
@@ -214,6 +222,30 @@ object WebNestShieldEngine {
         var current = host
         while (current.isNotEmpty()) {
             if (domainSet.contains(current)) return true
+            val dotIdx = current.indexOf('.')
+            if (dotIdx != -1 && dotIdx < current.length - 1) {
+                current = current.substring(dotIdx + 1)
+            } else {
+                break
+            }
+        }
+        return false
+    }
+
+    /**
+     * Checks if [host] or any of its parent domains have prefixes that match [fullUrl].
+     */
+    private fun matchesPrefixes(
+        host: String,
+        fullUrl: String,
+        prefixMap: HashMap<String, ArrayList<String>>
+    ): Boolean {
+        var current = host
+        while (current.isNotEmpty()) {
+            val list = prefixMap[current]
+            if (list != null && list.any { fullUrl.startsWith(it) }) {
+                return true
+            }
             val dotIdx = current.indexOf('.')
             if (dotIdx != -1 && dotIdx < current.length - 1) {
                 current = current.substring(dotIdx + 1)

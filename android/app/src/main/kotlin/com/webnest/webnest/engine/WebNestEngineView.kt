@@ -211,16 +211,17 @@ class WebNestEngineView(
                 request: WebResourceRequest?
             ): Boolean {
                 val url = request?.url?.toString() ?: return false
-                return handleUrlOverride(view, url)
+                val hasGesture = request.hasGesture()
+                return handleUrlOverride(view, url, hasGesture)
             }
 
             @Deprecated("Deprecated in Java")
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 if (url == null) return false
-                return handleUrlOverride(view, url)
+                return handleUrlOverride(view, url, false)
             }
 
-            private fun handleUrlOverride(view: WebView?, url: String): Boolean {
+            private fun handleUrlOverride(view: WebView?, url: String, hasGesture: Boolean): Boolean {
                 if (shieldEnabled && WebNestShieldEngine.shouldBlockRequest(url)) {
                     blockedCount++
                     methodChannel.invokeMethod(
@@ -231,6 +232,9 @@ class WebNestEngineView(
                 }
                 
                 if (openLinksExternally) {
+                    if (!hasGesture && shieldEnabled) {
+                        return true // Block auto-redirects opening external browser
+                    }
                     try {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                         view?.context?.startActivity(intent)
@@ -241,6 +245,9 @@ class WebNestEngineView(
                 }
 
                 if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                    if (!hasGesture && shieldEnabled) {
+                        return true // Block background auto-redirects to intents
+                    }
                     try {
                         val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
                         if (intent.resolveActivity(view?.context?.packageManager!!) != null) {
@@ -340,8 +347,8 @@ class WebNestEngineView(
                 isUserGesture: Boolean,
                 resultMsg: android.os.Message?
             ): Boolean {
-                // Block pop-ups if configured
-                if (popupBlocking && !isUserGesture) return false
+                // Block pop-ups if configured or if Shield is enabled (kills pop-unders)
+                if ((popupBlocking || shieldEnabled) && !isUserGesture) return false
                 
                 val transport = resultMsg?.obj as? WebView.WebViewTransport
                 if (transport != null) {
