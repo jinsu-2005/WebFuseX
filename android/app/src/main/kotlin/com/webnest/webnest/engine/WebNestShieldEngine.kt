@@ -177,8 +177,12 @@ object WebNestShieldEngine {
         return try {
             val uri = Uri.parse(url)
             val host = uri.host?.lowercase() ?: return false
-            val path = uri.path?.lowercase() ?: ""
-            val fullUrl = "$host$path"
+            val schemePos = url.indexOf("://")
+            val fullUrl = if (schemePos != -1) {
+                url.substring(schemePos + 3).lowercase()
+            } else {
+                url.lowercase()
+            }
 
             synchronized(lock) {
                 // Check exceptions first

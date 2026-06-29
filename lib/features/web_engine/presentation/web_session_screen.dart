@@ -38,8 +38,9 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
   GlobalKey _webViewKey = GlobalKey();
 
   GlobalKey _getWebViewKey(String settingsHash) {
-    if (settingsHash != _currentSettingsHash) {
-      _currentSettingsHash = settingsHash;
+    final fullHash = '${settingsHash}_$_crashRecoveryCount';
+    if (fullHash != _currentSettingsHash) {
+      _currentSettingsHash = fullHash;
       _webViewKey = GlobalKey();
     }
     return _webViewKey;
@@ -57,6 +58,7 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
   int _blockedCount = 0;
   bool _isFullscreen = false;
   bool _canGoBack = false;
+  int _crashRecoveryCount = 0;
 
   Timer? _refreshTimer;
   WebEngineChannel? _channel;
@@ -104,6 +106,10 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       _startTimer();
+      _channel?.resume();
+    } else if (state == AppLifecycleState.paused) {
+      _stopTimer();
+      _channel?.pause();
     } else {
       _stopTimer();
     }
@@ -418,7 +424,15 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
         onPopInvokedWithResult: (didPop, result) {
           if (didPop) return;
           if (_canGoBack) {
-            _channel?.goBack();
+            final navigator = Navigator.of(context);
+            _channel?.goBack().then((success) {
+              if (mounted && success == false) {
+                setState(() => _canGoBack = false);
+                if (navigator.canPop()) {
+                  navigator.pop();
+                }
+              }
+            });
           }
         },
         child: Scaffold(
@@ -430,7 +444,6 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
                 onTap: _controlsVisible ? _hideControls : null,
                 child: WebEngineView(
                   key: _getWebViewKey(
-                    '${sessionUrl}_'
                     '${app.shieldEnabledOverride ?? app.shieldEnabled}_'
                     '${app.desktopModeOverride ?? app.desktopMode}_'
                     '${app.jsEnabledOverride ?? settings.javascriptEnabled}_'
@@ -478,6 +491,13 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
                       });
                     }
                   },
+                  onRenderProcessCrash: () {
+                    if (mounted) {
+                      setState(() {
+                        _crashRecoveryCount++;
+                      });
+                    }
+                  },
                   onChannelCreated: (ch) => _channel = ch,
                   onPermissionRequest: (origin, resources) async {
                     final perms = ref.read(permissionsProvider.notifier);
@@ -516,7 +536,15 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
         if (_canGoBack) {
-          _channel?.goBack();
+          final navigator = Navigator.of(context);
+          _channel?.goBack().then((success) {
+            if (mounted && success == false) {
+              setState(() => _canGoBack = false);
+              if (navigator.canPop()) {
+                navigator.pop();
+              }
+            }
+          });
         }
       },
       child: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -536,7 +564,6 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
                   onTap: _controlsVisible ? _hideControls : null,
                   child: WebEngineView(
                     key: _getWebViewKey(
-                    '${sessionUrl}_'
                     '${app.shieldEnabledOverride ?? app.shieldEnabled}_'
                     '${app.desktopModeOverride ?? app.desktopMode}_'
                     '${app.jsEnabledOverride ?? settings.javascriptEnabled}_'
@@ -609,6 +636,13 @@ class _WebSessionScreenState extends ConsumerState<WebSessionScreen>
                       if (mounted && _canGoBack != canGoBack) {
                         setState(() {
                           _canGoBack = canGoBack;
+                        });
+                      }
+                    },
+                    onRenderProcessCrash: () {
+                      if (mounted) {
+                        setState(() {
+                          _crashRecoveryCount++;
                         });
                       }
                     },

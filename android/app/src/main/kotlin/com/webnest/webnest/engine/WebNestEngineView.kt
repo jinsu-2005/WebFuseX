@@ -117,6 +117,7 @@ class WebNestEngineView(
             domStorageEnabled = true
             databaseEnabled   = true
             mediaPlaybackRequiresUserGesture = false
+            setSupportMultipleWindows(true)
 
             // Zoom settings
             setSupportZoom(pinchToZoomEnabled)
@@ -171,6 +172,13 @@ class WebNestEngineView(
         webView.webViewClient = object : WebViewClient() {
             private var originalUserAgent: String? = null
 
+            override fun onRenderProcessGone(view: WebView?, detail: android.webkit.RenderProcessGoneDetail?): Boolean {
+                webView.post {
+                    methodChannel.invokeMethod("onRenderProcessGone", null)
+                }
+                return true
+            }
+
             override fun shouldInterceptRequest(
                 view: WebView?,
                 request: WebResourceRequest?
@@ -184,6 +192,10 @@ class WebNestEngineView(
                                 "onResourceBlocked",
                                 mapOf("blockedCount" to blockedCount)
                             )
+                        }
+                        if (request.isForMainFrame) {
+                            val html = "<html><head><meta name='viewport' content='width=device-width, initial-scale=1.0'></head><body style='background-color:#0F172A;color:white;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;'><h2>Shield Blocked Redirect</h2><p style='color:#ccc'>This page was blocked to protect you.</p></body></html>"
+                            return WebResourceResponse("text/html", "UTF-8", ByteArrayInputStream(html.toByteArray()))
                         }
                         return WebResourceResponse(
                             "text/plain", "UTF-8",
@@ -209,6 +221,15 @@ class WebNestEngineView(
             }
 
             private fun handleUrlOverride(view: WebView?, url: String): Boolean {
+                if (shieldEnabled && WebNestShieldEngine.shouldBlockRequest(url)) {
+                    blockedCount++
+                    methodChannel.invokeMethod(
+                        "onResourceBlocked",
+                        mapOf("blockedCount" to blockedCount)
+                    )
+                    return true
+                }
+                
                 if (openLinksExternally) {
                     try {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -218,6 +239,26 @@ class WebNestEngineView(
                         e.printStackTrace()
                     }
                 }
+
+                if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                    try {
+                        val intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME)
+                        if (intent.resolveActivity(view?.context?.packageManager!!) != null) {
+                            view?.context?.startActivity(intent)
+                            return true
+                        }
+                    } catch (e: Exception) {
+                        // fallback
+                    }
+                    try {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                        view?.context?.startActivity(intent)
+                        return true
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+
                 return false
             }
 
@@ -227,6 +268,12 @@ class WebNestEngineView(
                 favicon: android.graphics.Bitmap?
             ) {
                 super.onPageStarted(view, url, favicon)
+                view?.let {
+                    methodChannel.invokeMethod(
+                        "onHistoryChanged",
+                        mapOf("canGoBack" to it.canGoBack(), "canGoForward" to it.canGoForward())
+                    )
+                }
                 methodChannel.invokeMethod("onPageStarted", mapOf("url" to url))
 
                 if (url != null && view != null) {
@@ -254,6 +301,12 @@ class WebNestEngineView(
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
+                view?.let {
+                    methodChannel.invokeMethod(
+                        "onHistoryChanged",
+                        mapOf("canGoBack" to it.canGoBack(), "canGoForward" to it.canGoForward())
+                    )
+                }
                 methodChannel.invokeMethod("onPageFinished", mapOf("url" to url))
             }
 
@@ -289,6 +342,46 @@ class WebNestEngineView(
             ): Boolean {
                 // Block pop-ups if configured
                 if (popupBlocking && !isUserGesture) return false
+                
+                val transport = resultMsg?.obj as? WebView.WebViewTransport
+                if (transport != null) {
+                    val newWebView = WebView(view?.context!!)
+                    newWebView.webViewClient = object : WebViewClient() {
+                        override fun shouldOverrideUrlLoading(v: WebView?, request: WebResourceRequest?): Boolean {
+                            val url = request?.url?.toString()
+                            if (url != null) {
+                                if (shieldEnabled && WebNestShieldEngine.shouldBlockRequest(url)) {
+                                    blockedCount++
+                                    methodChannel.invokeMethod(
+                                        "onResourceBlocked",
+                                        mapOf("blockedCount" to blockedCount)
+                                    )
+                                    return true // Silently block popup ad
+                                }
+                                this@WebNestEngineView.webView.loadUrl(url)
+                            }
+                            return true
+                        }
+                        @Deprecated("Deprecated in Java")
+                        override fun shouldOverrideUrlLoading(v: WebView?, url: String?): Boolean {
+                            if (url != null) {
+                                if (shieldEnabled && WebNestShieldEngine.shouldBlockRequest(url)) {
+                                    blockedCount++
+                                    methodChannel.invokeMethod(
+                                        "onResourceBlocked",
+                                        mapOf("blockedCount" to blockedCount)
+                                    )
+                                    return true
+                                }
+                                this@WebNestEngineView.webView.loadUrl(url)
+                            }
+                            return true
+                        }
+                    }
+                    transport.webView = newWebView
+                    resultMsg.sendToTarget()
+                    return true
+                }
                 return super.onCreateWindow(view, isDialog, isUserGesture, resultMsg)
             }
 
@@ -477,6 +570,16 @@ class WebNestEngineView(
             }
             "reload" -> {
                 webView.reload()
+                result.success(null)
+            }
+            "onPause" -> {
+                webView.onPause()
+                webView.pauseTimers()
+                result.success(null)
+            }
+            "onResume" -> {
+                webView.onResume()
+                webView.resumeTimers()
                 result.success(null)
             }
             else -> result.notImplemented()

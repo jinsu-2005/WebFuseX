@@ -14,6 +14,7 @@ class WebEngineChannel {
   Future<bool> Function(String origin, List<String> resources)? onPermissionRequest;
   Future<bool> Function(String origin)? onGeolocationPermission;
   void Function(bool canGoBack, bool canGoForward)? onHistoryChanged;
+  void Function()? onRenderProcessCrash;
 
   WebEngineChannel(this.viewId) {
     _channel = MethodChannel('com.webnest/engine_$viewId');
@@ -28,6 +29,9 @@ class WebEngineChannel {
         if (canGoBack != null && canGoForward != null) {
           onHistoryChanged?.call(canGoBack, canGoForward);
         }
+        break;
+      case 'onRenderProcessGone':
+        onRenderProcessCrash?.call();
         break;
       case 'onProgressChanged':
         final progress = call.arguments['progress'] as int?;
@@ -93,6 +97,14 @@ class WebEngineChannel {
 
   Future<void> reload() async {
     await _channel.invokeMethod('reload');
+  }
+
+  Future<void> pause() async {
+    await _channel.invokeMethod('onPause');
+  }
+
+  Future<void> resume() async {
+    await _channel.invokeMethod('onResume');
   }
 
   static Future<void> clearData(String id) async {
