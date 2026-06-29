@@ -1,4 +1,4 @@
-﻿import 'package:flutter/services.dart';
+import 'package:flutter/services.dart';
 
 /// Flutter-side channel for the native Shield (ad blocker) engine.
 ///
@@ -25,6 +25,7 @@ class ShieldChannel {
 
   /// Loads multiple filter list files in sequence.
   static Future<void> loadFilterLists(List<String> filePaths) async {
+    await clearRules();
     for (final path in filePaths) {
       await loadFilterList(path);
     }

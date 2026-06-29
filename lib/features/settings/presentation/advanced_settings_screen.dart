@@ -67,12 +67,15 @@ class _AdvancedSettingsScreenState
     setState(() => _isUpdatingLists = true);
     try {
       final paths = await FilterListManager.updateEnabledLists(
-          FilterListUrls.defaults);
+        FilterListUrls.defaults,
+      );
       await ShieldChannel.loadFilterLists(paths);
       await ref.read(appSettingsProvider.notifier).markFilterListsUpdated();
-      if (mounted) _showSnack('Filter lists updated (${paths.length} lists loaded).');
+      if (mounted)
+        _showSnack('Filter lists updated (${paths.length} lists loaded).');
     } catch (_) {
-      if (mounted) _showSnack('Could not update filter lists. Check your connection.');
+      if (mounted)
+        _showSnack('Could not update filter lists. Check your connection.');
     } finally {
       if (mounted) setState(() => _isUpdatingLists = false);
     }
@@ -95,7 +98,9 @@ class _AdvancedSettingsScreenState
         context: context,
         builder: (ctx) => AlertDialog(
           backgroundColor: const Color(0xFF1E293B),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: const Text(
             'âš ï¸ Disable JavaScript?',
             style: TextStyle(color: Colors.white),
@@ -109,15 +114,22 @@ class _AdvancedSettingsScreenState
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white54),
+              ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(ctx);
-                ref.read(appSettingsProvider.notifier).setJavascriptEnabled(false);
+                ref
+                    .read(appSettingsProvider.notifier)
+                    .setJavascriptEnabled(false);
               },
-              child: const Text('Disable Anyway',
-                  style: TextStyle(color: Colors.redAccent)),
+              child: const Text(
+                'Disable Anyway',
+                style: TextStyle(color: Colors.redAccent),
+              ),
             ),
           ],
         ),
@@ -133,7 +145,9 @@ class _AdvancedSettingsScreenState
         context: context,
         builder: (ctx) => AlertDialog(
           backgroundColor: const Color(0xFF1E293B),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: const Text(
             'âš ï¸ Disable Hardware Acceleration?',
             style: TextStyle(color: Colors.white),
@@ -146,15 +160,22 @@ class _AdvancedSettingsScreenState
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white54),
+              ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(ctx);
-                ref.read(appSettingsProvider.notifier).setHardwareAcceleration(false);
+                ref
+                    .read(appSettingsProvider.notifier)
+                    .setHardwareAcceleration(false);
               },
-              child: const Text('Disable Anyway',
-                  style: TextStyle(color: Colors.orangeAccent)),
+              child: const Text(
+                'Disable Anyway',
+                style: TextStyle(color: Colors.orangeAccent),
+              ),
             ),
           ],
         ),
@@ -165,8 +186,7 @@ class _AdvancedSettingsScreenState
   }
 
   void _showDnsDialog(AppSettings settings) {
-    final customDnsCtrl =
-        TextEditingController(text: settings.customDnsServer);
+    final customDnsCtrl = TextEditingController(text: settings.customDnsServer);
     DnsMode selected = settings.dnsMode;
 
     showDialog(
@@ -174,28 +194,40 @@ class _AdvancedSettingsScreenState
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) => AlertDialog(
           backgroundColor: const Color(0xFF1E293B),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Text('DNS Selection',
-              style: TextStyle(color: Colors.white)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            'DNS Selection',
+            style: TextStyle(color: Colors.white),
+          ),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 RadioListTile<DnsMode>(
-                  title: const Text('System DNS',
-                      style: TextStyle(color: Colors.white)),
-                  subtitle: const Text('Use device default',
-                      style: TextStyle(color: Colors.white54, fontSize: 12)),
+                  title: const Text(
+                    'System DNS',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  subtitle: const Text(
+                    'Use device default',
+                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                  ),
                   value: DnsMode.system,
                   groupValue: selected,
                   activeColor: const Color(0xFF818CF8),
                   onChanged: (v) => setDialogState(() => selected = v!),
                 ),
                 RadioListTile<DnsMode>(
-                  title: const Text('Custom DNS',
-                      style: TextStyle(color: Colors.white)),
-                  subtitle: const Text('Enter custom DNS server address',
-                      style: TextStyle(color: Colors.white54, fontSize: 12)),
+                  title: const Text(
+                    'Custom DNS',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  subtitle: const Text(
+                    'Enter custom DNS server address',
+                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                  ),
                   value: DnsMode.custom,
                   groupValue: selected,
                   activeColor: const Color(0xFF818CF8),
@@ -216,8 +248,10 @@ class _AdvancedSettingsScreenState
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
                       ),
                     ),
                   ),
@@ -227,14 +261,20 @@ class _AdvancedSettingsScreenState
                   decoration: BoxDecoration(
                     color: Colors.amber.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.amber.withValues(alpha: 0.25)),
+                    border: Border.all(
+                      color: Colors.amber.withValues(alpha: 0.25),
+                    ),
                   ),
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.info_outline, color: Colors.amberAccent, size: 16),
+                          Icon(
+                            Icons.info_outline,
+                            color: Colors.amberAccent,
+                            size: 16,
+                          ),
                           SizedBox(width: 8),
                           Text(
                             'Android WebView Limitation',
@@ -254,7 +294,11 @@ class _AdvancedSettingsScreenState
                         '2. Tap Private DNS\n'
                         '3. Select Private DNS provider hostname\n'
                         '4. Enter: dns.adguard.com (or your provider)',
-                        style: TextStyle(color: Colors.white70, fontSize: 11, height: 1.4),
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 11,
+                          height: 1.4,
+                        ),
                       ),
                     ],
                   ),
@@ -265,8 +309,10 @@ class _AdvancedSettingsScreenState
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel',
-                  style: TextStyle(color: Colors.white54)),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white54),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -278,8 +324,10 @@ class _AdvancedSettingsScreenState
                       .setCustomDns(customDnsCtrl.text.trim());
                 }
               },
-              child: const Text('Save',
-                  style: TextStyle(color: Color(0xFF818CF8))),
+              child: const Text(
+                'Save',
+                style: TextStyle(color: Color(0xFF818CF8)),
+              ),
             ),
           ],
         ),
@@ -288,8 +336,7 @@ class _AdvancedSettingsScreenState
   }
 
   void _showUserAgentDialog(AppSettings settings) {
-    final customUaCtrl =
-        TextEditingController(text: settings.customUserAgent);
+    final customUaCtrl = TextEditingController(text: settings.customUserAgent);
     UserAgentMode selected = settings.userAgentMode;
 
     showDialog(
@@ -297,30 +344,41 @@ class _AdvancedSettingsScreenState
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) => AlertDialog(
           backgroundColor: const Color(0xFF1E293B),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Text('User-Agent', style: TextStyle(color: Colors.white)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            'User-Agent',
+            style: TextStyle(color: Colors.white),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               RadioListTile<UserAgentMode>(
-                title: const Text('Default (Android)',
-                    style: TextStyle(color: Colors.white)),
+                title: const Text(
+                  'Default (Android)',
+                  style: TextStyle(color: Colors.white),
+                ),
                 value: UserAgentMode.defaultAgent,
                 groupValue: selected,
                 activeColor: const Color(0xFF818CF8),
                 onChanged: (v) => setDialogState(() => selected = v!),
               ),
               RadioListTile<UserAgentMode>(
-                title: const Text('Desktop (Chrome)',
-                    style: TextStyle(color: Colors.white)),
+                title: const Text(
+                  'Desktop (Chrome)',
+                  style: TextStyle(color: Colors.white),
+                ),
                 value: UserAgentMode.desktop,
                 groupValue: selected,
                 activeColor: const Color(0xFF818CF8),
                 onChanged: (v) => setDialogState(() => selected = v!),
               ),
               RadioListTile<UserAgentMode>(
-                title: const Text('Custom',
-                    style: TextStyle(color: Colors.white)),
+                title: const Text(
+                  'Custom',
+                  style: TextStyle(color: Colors.white),
+                ),
                 value: UserAgentMode.custom,
                 groupValue: selected,
                 activeColor: const Color(0xFF818CF8),
@@ -336,7 +394,9 @@ class _AdvancedSettingsScreenState
                     decoration: InputDecoration(
                       hintText: 'Paste a custom User-Agent stringâ€¦',
                       hintStyle: const TextStyle(
-                          color: Colors.white30, fontSize: 12),
+                        color: Colors.white30,
+                        fontSize: 12,
+                      ),
                       filled: true,
                       fillColor: Colors.white.withValues(alpha: 0.06),
                       border: OutlineInputBorder(
@@ -352,8 +412,10 @@ class _AdvancedSettingsScreenState
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancel',
-                  style: TextStyle(color: Colors.white54)),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white54),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -367,8 +429,10 @@ class _AdvancedSettingsScreenState
                       .setCustomUserAgent(customUaCtrl.text.trim());
                 }
               },
-              child: const Text('Save',
-                  style: TextStyle(color: Color(0xFF818CF8))),
+              child: const Text(
+                'Save',
+                style: TextStyle(color: Color(0xFF818CF8)),
+              ),
             ),
           ],
         ),
@@ -410,7 +474,7 @@ class _AdvancedSettingsScreenState
               value: settings.twoFingerReloadEnabled,
               onChanged: (v) =>
                   ref.read(appSettingsProvider.notifier).setTwoFingerReload(v),
-              activeColor: const Color(0xFF818CF8),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
 
@@ -423,8 +487,10 @@ class _AdvancedSettingsScreenState
             subtitle: 'Allow pinching to zoom web pages',
             trailing: Switch(
               value: settings.pinchToZoomEnabled,
-              onChanged: (v) => ref.read(appSettingsProvider.notifier).setPinchToZoomEnabled(v),
-              activeColor: const Color(0xFF818CF8),
+              onChanged: (v) => ref
+                  .read(appSettingsProvider.notifier)
+                  .setPinchToZoomEnabled(v),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
           _SettingsTile(
@@ -434,8 +500,10 @@ class _AdvancedSettingsScreenState
             subtitle: 'Load images on web pages',
             trailing: Switch(
               value: settings.loadImagesEnabled,
-              onChanged: (v) => ref.read(appSettingsProvider.notifier).setLoadImagesEnabled(v),
-              activeColor: const Color(0xFF818CF8),
+              onChanged: (v) => ref
+                  .read(appSettingsProvider.notifier)
+                  .setLoadImagesEnabled(v),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
           _SettingsTile(
@@ -445,8 +513,10 @@ class _AdvancedSettingsScreenState
             subtitle: 'Launch links in default external browser',
             trailing: Switch(
               value: settings.openLinksExternally,
-              onChanged: (v) => ref.read(appSettingsProvider.notifier).setOpenLinksExternally(v),
-              activeColor: const Color(0xFF818CF8),
+              onChanged: (v) => ref
+                  .read(appSettingsProvider.notifier)
+                  .setOpenLinksExternally(v),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
           _SettingsTile(
@@ -456,8 +526,10 @@ class _AdvancedSettingsScreenState
             subtitle: 'Enable periodic auto refresh by default',
             trailing: Switch(
               value: settings.autoRefreshEnabled,
-              onChanged: (v) => ref.read(appSettingsProvider.notifier).setAutoRefreshEnabled(v),
-              activeColor: const Color(0xFF818CF8),
+              onChanged: (v) => ref
+                  .read(appSettingsProvider.notifier)
+                  .setAutoRefreshEnabled(v),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
           _SettingsTile(
@@ -469,22 +541,34 @@ class _AdvancedSettingsScreenState
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.remove, color: Colors.white60, size: 16),
+                  icon: const Icon(
+                    Icons.remove,
+                    color: Colors.white60,
+                    size: 16,
+                  ),
                   onPressed: settings.autoRefreshInterval > 5
-                      ? () => ref.read(appSettingsProvider.notifier).setAutoRefreshInterval(settings.autoRefreshInterval - 5)
+                      ? () => ref
+                            .read(appSettingsProvider.notifier)
+                            .setAutoRefreshInterval(
+                              settings.autoRefreshInterval - 5,
+                            )
                       : null,
                 ),
-                Text('${settings.autoRefreshInterval}s', style: const TextStyle(color: Colors.white, fontSize: 13)),
+                Text(
+                  '${settings.autoRefreshInterval}s',
+                  style: const TextStyle(color: Colors.white, fontSize: 13),
+                ),
                 IconButton(
                   icon: const Icon(Icons.add, color: Colors.white60, size: 16),
-                  onPressed: () => ref.read(appSettingsProvider.notifier).setAutoRefreshInterval(settings.autoRefreshInterval + 5),
+                  onPressed: () => ref
+                      .read(appSettingsProvider.notifier)
+                      .setAutoRefreshInterval(settings.autoRefreshInterval + 5),
                 ),
               ],
             ),
           ),
 
           // â”€â”€ Privacy & Security â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
           _SectionHeader('Privacy & Security'),
           _SettingsTile(
             icon: Icons.code_rounded,
@@ -494,7 +578,7 @@ class _AdvancedSettingsScreenState
             trailing: Switch(
               value: settings.javascriptEnabled,
               onChanged: (v) => _showJsWarning(v, settings),
-              activeColor: const Color(0xFF818CF8),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
           _SettingsTile(
@@ -506,7 +590,7 @@ class _AdvancedSettingsScreenState
               value: settings.cookiesEnabled,
               onChanged: (v) =>
                   ref.read(appSettingsProvider.notifier).setCookiesEnabled(v),
-              activeColor: const Color(0xFF818CF8),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
           _SettingsTile(
@@ -518,10 +602,10 @@ class _AdvancedSettingsScreenState
               value: settings.thirdPartyCookiesEnabled,
               onChanged: settings.cookiesEnabled
                   ? (v) => ref
-                      .read(appSettingsProvider.notifier)
-                      .setThirdPartyCookiesEnabled(v)
+                        .read(appSettingsProvider.notifier)
+                        .setThirdPartyCookiesEnabled(v)
                   : null,
-              activeColor: const Color(0xFF818CF8),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
           _SettingsTile(
@@ -534,7 +618,7 @@ class _AdvancedSettingsScreenState
               onChanged: (v) => ref
                   .read(appSettingsProvider.notifier)
                   .setPopupBlockingEnabled(v),
-              activeColor: const Color(0xFF818CF8),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
           _SettingsTile(
@@ -547,7 +631,7 @@ class _AdvancedSettingsScreenState
               onChanged: (v) => ref
                   .read(appSettingsProvider.notifier)
                   .setTrackerBlockingEnabled(v),
-              activeColor: const Color(0xFF818CF8),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
 
@@ -557,12 +641,13 @@ class _AdvancedSettingsScreenState
             icon: Icons.security_rounded,
             iconColor: Colors.greenAccent,
             title: 'WebFuseX Shield',
-            subtitle: 'Block ads and trackers using uBlock-compatible filter lists',
+            subtitle:
+                'Block ads and trackers using uBlock-compatible filter lists',
             trailing: Switch(
               value: settings.adBlockerEnabled,
               onChanged: (v) =>
                   ref.read(appSettingsProvider.notifier).setAdBlockerEnabled(v),
-              activeColor: Colors.greenAccent,
+              activeThumbColor: Colors.greenAccent,
             ),
           ),
           _SettingsTile(
@@ -591,9 +676,7 @@ class _AdvancedSettingsScreenState
             subtitle: 'Enable or disable individual filter lists',
             trailing: const Icon(Icons.chevron_right, color: Colors.white38),
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => const FilterListsScreen(),
-              ),
+              MaterialPageRoute(builder: (_) => const FilterListsScreen()),
             ),
           ),
 
@@ -608,7 +691,7 @@ class _AdvancedSettingsScreenState
               value: settings.forceDarkModeForWebsites,
               onChanged: (v) =>
                   ref.read(appSettingsProvider.notifier).setForceDarkMode(v),
-              activeColor: const Color(0xFF818CF8),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
           Padding(
@@ -616,34 +699,85 @@ class _AdvancedSettingsScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(children: [
-                  Container(width: 38, height: 38,
-                    decoration: BoxDecoration(
-                      color: Colors.blueAccent.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(10)),
-                    child: const Icon(Icons.devices_rounded, color: Colors.blueAccent, size: 20)),
-                  const SizedBox(width: 14),
-                  const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('Default Mode', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500)),
-                    Text('Choose site layout for all apps', style: TextStyle(color: Colors.white38, fontSize: 12)),
-                  ])),
-                ]),
-                const SizedBox(height: 12),
-                Center(child: SegmentedButton<AppDefaultMode>(
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.resolveWith<Color>((s) => s.contains(WidgetState.selected) ? const Color(0xFF818CF8) : Colors.white.withValues(alpha: 0.06)),
-                    foregroundColor: WidgetStateProperty.resolveWith<Color>((s) => s.contains(WidgetState.selected) ? Colors.white : Colors.white54),
-                    side: WidgetStateProperty.all(const BorderSide(color: Colors.white12)),
-                  ),
-                  segments: const [
-                    ButtonSegment(value: AppDefaultMode.mobile, icon: Icon(Icons.smartphone_rounded, size: 16), label: Text('Mobile')),
-                    ButtonSegment(value: AppDefaultMode.desktop, icon: Icon(Icons.desktop_windows_rounded, size: 16), label: Text('Desktop')),
+                Row(
+                  children: [
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: Colors.blueAccent.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.devices_rounded,
+                        color: Colors.blueAccent,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Default Mode',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            'Choose site layout for all apps',
+                            style: TextStyle(
+                              color: Colors.white38,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
-                  selected: {settings.defaultMode},
-                  onSelectionChanged: (Set<AppDefaultMode> sel) {
-                    if (sel.isNotEmpty) ref.read(appSettingsProvider.notifier).setDefaultMode(sel.first);
-                  },
-                )),
+                ),
+                const SizedBox(height: 12),
+                Center(
+                  child: SegmentedButton<AppDefaultMode>(
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                        (s) => s.contains(WidgetState.selected)
+                            ? const Color(0xFF818CF8)
+                            : Colors.white.withValues(alpha: 0.06),
+                      ),
+                      foregroundColor: WidgetStateProperty.resolveWith<Color>(
+                        (s) => s.contains(WidgetState.selected)
+                            ? Colors.white
+                            : Colors.white54,
+                      ),
+                      side: WidgetStateProperty.all(
+                        const BorderSide(color: Colors.white12),
+                      ),
+                    ),
+                    segments: const [
+                      ButtonSegment(
+                        value: AppDefaultMode.mobile,
+                        icon: Icon(Icons.smartphone_rounded, size: 16),
+                        label: Text('Mobile'),
+                      ),
+                      ButtonSegment(
+                        value: AppDefaultMode.desktop,
+                        icon: Icon(Icons.desktop_windows_rounded, size: 16),
+                        label: Text('Desktop'),
+                      ),
+                    ],
+                    selected: {settings.defaultMode},
+                    onSelectionChanged: (Set<AppDefaultMode> sel) {
+                      if (sel.isNotEmpty)
+                        ref
+                            .read(appSettingsProvider.notifier)
+                            .setDefaultMode(sel.first);
+                    },
+                  ),
+                ),
                 const SizedBox(height: 4),
               ],
             ),
@@ -659,7 +793,7 @@ class _AdvancedSettingsScreenState
             trailing: Switch(
               value: settings.hardwareAccelerationEnabled,
               onChanged: _showHwAccelWarning,
-              activeColor: const Color(0xFF818CF8),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
           _SettingsTile(
@@ -672,7 +806,7 @@ class _AdvancedSettingsScreenState
               onChanged: (v) => ref
                   .read(appSettingsProvider.notifier)
                   .setBackgroundPlayback(v),
-              activeColor: const Color(0xFF818CF8),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
 
@@ -709,7 +843,7 @@ class _AdvancedSettingsScreenState
               onChanged: (v) => ref
                   .read(appSettingsProvider.notifier)
                   .setRestorePreviousSession(v),
-              activeColor: const Color(0xFF818CF8),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
           _SettingsTile(
@@ -722,7 +856,7 @@ class _AdvancedSettingsScreenState
               onChanged: (v) => ref
                   .read(appSettingsProvider.notifier)
                   .setTwoFingerReloadEnabled(v),
-              activeColor: const Color(0xFF818CF8),
+              activeThumbColor: const Color(0xFF818CF8),
             ),
           ),
 
@@ -735,7 +869,8 @@ class _AdvancedSettingsScreenState
             subtitle: 'Free up space by deleting cached web data',
             onTap: () => _confirmAction(
               title: 'Clear Cache?',
-              message: 'This will clear cached images and files from all websites.',
+              message:
+                  'This will clear cached images and files from all websites.',
               onConfirm: _clearCache,
             ),
           ),
@@ -743,7 +878,8 @@ class _AdvancedSettingsScreenState
             icon: Icons.cookie_outlined,
             iconColor: Colors.redAccent,
             title: 'Clear Cookies',
-            subtitle: 'Remove all cookies â€” you will be logged out everywhere',
+            subtitle:
+                'Remove all cookies â€” you will be logged out everywhere',
             onTap: () => _confirmAction(
               title: 'Clear All Cookies?',
               message:
@@ -782,7 +918,8 @@ class _AdvancedSettingsScreenState
             icon: Icons.manage_accounts_rounded,
             iconColor: const Color(0xFF818CF8),
             title: 'Website Permissions Manager',
-            subtitle: 'Manage camera, microphone, location, and notification access',
+            subtitle:
+                'Manage camera, microphone, location, and notification access',
             trailing: const Icon(Icons.chevron_right, color: Colors.white38),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
@@ -811,43 +948,75 @@ class _AdvancedSettingsScreenState
                   ),
                   if (!settings.hideNotch) ...[
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 8,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Notch Transparency', style: TextStyle(color: Colors.white, fontSize: 14)),
+                          const Text(
+                            'Notch Transparency',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
                           Slider(
                             value: settings.notchTransparency,
                             min: 0.1,
                             max: 1.0,
                             activeColor: Colors.tealAccent,
-                            inactiveColor: Colors.tealAccent.withValues(alpha: 0.2),
+                            inactiveColor: Colors.tealAccent.withValues(
+                              alpha: 0.2,
+                            ),
                             onChanged: (v) => ref
                                 .read(appSettingsProvider.notifier)
-                                .updateSettings(settings.copyWith(notchTransparency: v)),
+                                .updateSettings(
+                                  settings.copyWith(notchTransparency: v),
+                                ),
                           ),
                         ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 8,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Notch Appearance', style: TextStyle(color: Colors.white, fontSize: 14)),
+                          const Text(
+                            'Notch Appearance',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
                           DropdownButton<String>(
                             value: settings.notchAppearance,
                             dropdownColor: const Color(0xFF1E293B),
-                            style: const TextStyle(color: Colors.white, fontSize: 13),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                            ),
                             underline: const SizedBox(),
                             items: const [
-                              DropdownMenuItem(value: 'pill', child: Text('Pill')),
-                              DropdownMenuItem(value: 'bar', child: Text('Flat Bar')),
-                              DropdownMenuItem(value: 'dot', child: Text('Dot')),
+                              DropdownMenuItem(
+                                value: 'pill',
+                                child: Text('Pill'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'bar',
+                                child: Text('Flat Bar'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'dot',
+                                child: Text('Dot'),
+                              ),
                             ],
                             onChanged: (v) {
                               if (v != null) {
-                                ref.read(appSettingsProvider.notifier).updateSettings(settings.copyWith(notchAppearance: v));
+                                ref
+                                    .read(appSettingsProvider.notifier)
+                                    .updateSettings(
+                                      settings.copyWith(notchAppearance: v),
+                                    );
                               }
                             },
                           ),
@@ -873,10 +1042,26 @@ class _AdvancedSettingsScreenState
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _socialButton(FontAwesomeIcons.linkedin, 'LinkedIn', 'https://linkedin.com'),
-                _socialButton(FontAwesomeIcons.instagram, 'Instagram', 'https://instagram.com'),
-                _socialButton(FontAwesomeIcons.github, 'GitHub', 'https://github.com'),
-                _socialButton(FontAwesomeIcons.youtube, 'YouTube', 'https://youtube.com'),
+                _socialButton(
+                  FontAwesomeIcons.linkedin,
+                  'LinkedIn',
+                  'https://linkedin.com',
+                ),
+                _socialButton(
+                  FontAwesomeIcons.instagram,
+                  'Instagram',
+                  'https://instagram.com',
+                ),
+                _socialButton(
+                  FontAwesomeIcons.github,
+                  'GitHub',
+                  'https://github.com',
+                ),
+                _socialButton(
+                  FontAwesomeIcons.youtube,
+                  'YouTube',
+                  'https://youtube.com',
+                ),
               ],
             ),
           ),
@@ -885,14 +1070,24 @@ class _AdvancedSettingsScreenState
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ElevatedButton.icon(
               onPressed: () {
-                _nativeChannel.invokeMethod('openUrl', {'url': 'https://buymeacoffee.com/jinsuj'});
+                _nativeChannel.invokeMethod('openUrl', {
+                  'url': 'https://buymeacoffee.com/jinsuj',
+                });
               },
               icon: const Icon(Icons.coffee, color: Colors.black87),
-              label: const Text('Buy Me a Coffee', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
+              label: const Text(
+                'Buy Me a Coffee',
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFFFDD00),
                 minimumSize: const Size.fromHeight(48),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ),
@@ -918,15 +1113,20 @@ class _AdvancedSettingsScreenState
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white54),
+            ),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               onConfirm();
             },
-            child: const Text('Confirm',
-                style: TextStyle(color: Colors.redAccent)),
+            child: const Text(
+              'Confirm',
+              style: TextStyle(color: Colors.redAccent),
+            ),
           ),
         ],
       ),
@@ -951,7 +1151,9 @@ class _AdvancedSettingsScreenState
       case UserAgentMode.custom:
         return s.customUserAgent.isNotEmpty
             ? s.customUserAgent.substring(
-                0, s.customUserAgent.length.clamp(0, 40))
+                0,
+                s.customUserAgent.length.clamp(0, 40),
+              )
             : 'Custom (not set)';
     }
   }
@@ -968,7 +1170,10 @@ class _AdvancedSettingsScreenState
           children: [
             FaIcon(icon, color: const Color(0xFF818CF8), size: 22),
             const SizedBox(height: 4),
-            Text(label, style: const TextStyle(color: Colors.white54, fontSize: 10)),
+            Text(
+              label,
+              style: const TextStyle(color: Colors.white54, fontSize: 10),
+            ),
           ],
         ),
       ),
@@ -1009,8 +1214,7 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
   Future<void> _updateSelected() async {
     setState(() => _isLoading = true);
     try {
-      final paths =
-          await FilterListManager.updateEnabledLists(_lists);
+      final paths = await FilterListManager.updateEnabledLists(_lists);
       await ShieldChannel.loadFilterLists(paths);
       await ref.read(appSettingsProvider.notifier).markFilterListsUpdated();
       if (mounted) {
@@ -1033,8 +1237,10 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF1E293B),
         elevation: 0,
-        title: const Text('Filter Lists',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+        title: const Text(
+          'Filter Lists',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -1046,11 +1252,16 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
                 ? const SizedBox(
                     width: 14,
                     height: 14,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.greenAccent),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.greenAccent,
+                    ),
                   )
                 : const Icon(Icons.update, size: 18, color: Colors.greenAccent),
-            label: const Text('Update',
-                style: TextStyle(color: Colors.greenAccent, fontSize: 13)),
+            label: const Text(
+              'Update',
+              style: TextStyle(color: Colors.greenAccent, fontSize: 13),
+            ),
           ),
           const SizedBox(width: 8),
         ],
@@ -1064,7 +1275,9 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
               'Filter lists are downloaded at runtime — they are not bundled in the app. '
               'Licenses apply to the content of the lists.',
               style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.4), fontSize: 12),
+                color: Colors.white.withValues(alpha: 0.4),
+                fontSize: 12,
+              ),
             ),
           ),
           Expanded(
@@ -1073,12 +1286,15 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
                 // Default lists section
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
-                  child: Text('BUILT-IN LISTS',
-                      style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.35),
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.8)),
+                  child: Text(
+                    'BUILT-IN LISTS',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.35),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
                 ),
                 ...List.generate(_lists.length, (i) {
                   final list = _lists[i];
@@ -1089,7 +1305,10 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
                         onToggle: (v) => _onToggle(i, v),
                       ),
                       if (i < _lists.length - 1)
-                        Divider(height: 1, color: Colors.white.withValues(alpha: 0.06)),
+                        Divider(
+                          height: 1,
+                          color: Colors.white.withValues(alpha: 0.06),
+                        ),
                     ],
                   );
                 }),
@@ -1099,28 +1318,51 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 4),
                   child: Row(
                     children: [
-                      Text('CUSTOM LISTS',
-                          style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.35),
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.8)),
+                      Text(
+                        'CUSTOM LISTS',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.35),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
                       const Spacer(),
                       GestureDetector(
                         onTap: _showAddCustomListDialog,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF818CF8).withValues(alpha: 0.15),
+                            color: const Color(
+                              0xFF818CF8,
+                            ).withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: const Color(0xFF818CF8).withValues(alpha: 0.4)),
+                            border: Border.all(
+                              color: const Color(
+                                0xFF818CF8,
+                              ).withValues(alpha: 0.4),
+                            ),
                           ),
                           child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.add, size: 14, color: Color(0xFF818CF8)),
+                              Icon(
+                                Icons.add,
+                                size: 14,
+                                color: Color(0xFF818CF8),
+                              ),
                               SizedBox(width: 4),
-                              Text('Add List', style: TextStyle(color: Color(0xFF818CF8), fontSize: 12, fontWeight: FontWeight.w600)),
+                              Text(
+                                'Add List',
+                                style: TextStyle(
+                                  color: Color(0xFF818CF8),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -1129,43 +1371,51 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
                   ),
                 ),
 
-                Consumer(builder: (context, ref, _) {
-                  final settings = ref.watch(appSettingsProvider);
-                  final customLists = settings.customFilterLists;
-                  if (customLists.isEmpty) {
-                    return Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-                      child: Text(
-                        'No custom lists. Tap "Add List" to add a custom filter list URL (EasyList, AdGuard, etc.)',
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 12),
-                      ),
-                    );
-                  }
-                  return Column(
-                    children: List.generate(customLists.length, (i) {
-                      final cl = customLists[i];
-                      final asList = FilterList(
-                        id: 'custom_$i',
-                        name: cl['name'] ?? 'Custom List ${i + 1}',
-                        url: cl['url'] ?? '',
-                        description: cl['url'] ?? '',
-                        license: 'Custom',
-                        enabled: cl['enabled'] == true,
-                      );
-                      return Column(
-                        children: [
-                          _FilterListTile(
-                            list: asList,
-                            onToggle: (v) => _onToggleCustom(i, v),
-                            onDelete: () => _deleteCustomList(i),
+                Consumer(
+                  builder: (context, ref, _) {
+                    final settings = ref.watch(appSettingsProvider);
+                    final customLists = settings.customFilterLists;
+                    if (customLists.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+                        child: Text(
+                          'No custom lists. Tap "Add List" to add a custom filter list URL (EasyList, AdGuard, etc.)',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            fontSize: 12,
                           ),
-                          if (i < customLists.length - 1)
-                            Divider(height: 1, color: Colors.white.withValues(alpha: 0.06)),
-                        ],
+                        ),
                       );
-                    }),
-                  );
-                }),
+                    }
+                    return Column(
+                      children: List.generate(customLists.length, (i) {
+                        final cl = customLists[i];
+                        final asList = FilterList(
+                          id: 'custom_$i',
+                          name: cl['name'] ?? 'Custom List ${i + 1}',
+                          url: cl['url'] ?? '',
+                          description: cl['url'] ?? '',
+                          license: 'Custom',
+                          enabled: cl['enabled'] == true,
+                        );
+                        return Column(
+                          children: [
+                            _FilterListTile(
+                              list: asList,
+                              onToggle: (v) => _onToggleCustom(i, v),
+                              onDelete: () => _deleteCustomList(i),
+                            ),
+                            if (i < customLists.length - 1)
+                              Divider(
+                                height: 1,
+                                color: Colors.white.withValues(alpha: 0.06),
+                              ),
+                          ],
+                        );
+                      }),
+                    );
+                  },
+                ),
                 const SizedBox(height: 24),
               ],
             ),
@@ -1181,8 +1431,12 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
     });
     final disabled = _lists.where((l) => !l.enabled).map((l) => l.id).toList();
     final enabled = _lists.where((l) => l.enabled).map((l) => l.id).toList();
-    ref.read(appSettingsProvider.notifier).updateSettings(
-          ref.read(appSettingsProvider).copyWith(
+    ref
+        .read(appSettingsProvider.notifier)
+        .updateSettings(
+          ref
+              .read(appSettingsProvider)
+              .copyWith(
                 disabledFilterLists: disabled,
                 enabledFilterLists: enabled,
               ),
@@ -1191,20 +1445,24 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
 
   void _onToggleCustom(int i, bool v) {
     final settings = ref.read(appSettingsProvider);
-    final customLists = List<Map<String, dynamic>>.from(settings.customFilterLists);
+    final customLists = List<Map<String, dynamic>>.from(
+      settings.customFilterLists,
+    );
     customLists[i] = {...customLists[i], 'enabled': v};
-    ref.read(appSettingsProvider.notifier).updateSettings(
-          settings.copyWith(customFilterLists: customLists),
-        );
+    ref
+        .read(appSettingsProvider.notifier)
+        .updateSettings(settings.copyWith(customFilterLists: customLists));
   }
 
   void _deleteCustomList(int i) {
     final settings = ref.read(appSettingsProvider);
-    final customLists = List<Map<String, dynamic>>.from(settings.customFilterLists);
+    final customLists = List<Map<String, dynamic>>.from(
+      settings.customFilterLists,
+    );
     customLists.removeAt(i);
-    ref.read(appSettingsProvider.notifier).updateSettings(
-          settings.copyWith(customFilterLists: customLists),
-        );
+    ref
+        .read(appSettingsProvider.notifier)
+        .updateSettings(settings.copyWith(customFilterLists: customLists));
   }
 
   void _showAddCustomListDialog() {
@@ -1215,7 +1473,10 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF1E293B),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Add Custom Filter List', style: TextStyle(color: Colors.white, fontSize: 16)),
+        title: const Text(
+          'Add Custom Filter List',
+          style: TextStyle(color: Colors.white, fontSize: 16),
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -1227,7 +1488,10 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
                 hintStyle: const TextStyle(color: Colors.white38),
                 filled: true,
                 fillColor: Colors.white.withValues(alpha: 0.06),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
               ),
             ),
             const SizedBox(height: 12),
@@ -1240,7 +1504,10 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
                 hintStyle: const TextStyle(color: Colors.white38),
                 filled: true,
                 fillColor: Colors.white.withValues(alpha: 0.06),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none,
+                ),
               ),
             ),
           ],
@@ -1248,7 +1515,10 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white54),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -1257,14 +1527,28 @@ class _FilterListsScreenState extends ConsumerState<FilterListsScreen> {
               if (url.isNotEmpty) {
                 Navigator.pop(ctx);
                 final settings = ref.read(appSettingsProvider);
-                final customLists = List<Map<String, dynamic>>.from(settings.customFilterLists);
-                customLists.add({'name': name.isNotEmpty ? name : url, 'url': url, 'enabled': true});
-                ref.read(appSettingsProvider.notifier).updateSettings(
+                final customLists = List<Map<String, dynamic>>.from(
+                  settings.customFilterLists,
+                );
+                customLists.add({
+                  'name': name.isNotEmpty ? name : url,
+                  'url': url,
+                  'enabled': true,
+                });
+                ref
+                    .read(appSettingsProvider.notifier)
+                    .updateSettings(
                       settings.copyWith(customFilterLists: customLists),
                     );
               }
             },
-            child: const Text('Add', style: TextStyle(color: Color(0xFF818CF8), fontWeight: FontWeight.bold)),
+            child: const Text(
+              'Add',
+              style: TextStyle(
+                color: Color(0xFF818CF8),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),
@@ -1277,7 +1561,11 @@ class _FilterListTile extends StatelessWidget {
   final ValueChanged<bool> onToggle;
   final VoidCallback? onDelete;
 
-  const _FilterListTile({required this.list, required this.onToggle, this.onDelete});
+  const _FilterListTile({
+    required this.list,
+    required this.onToggle,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1285,8 +1573,10 @@ class _FilterListTile extends StatelessWidget {
       title: Row(
         children: [
           Expanded(
-            child: Text(list.name,
-                style: const TextStyle(color: Colors.white, fontSize: 15)),
+            child: Text(
+              list.name,
+              style: const TextStyle(color: Colors.white, fontSize: 15),
+            ),
           ),
           if (onDelete != null)
             GestureDetector(
@@ -1298,21 +1588,24 @@ class _FilterListTile extends StatelessWidget {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(list.description,
-              style: const TextStyle(color: Colors.white54, fontSize: 12)),
+          Text(
+            list.description,
+            style: const TextStyle(color: Colors.white54, fontSize: 12),
+          ),
           const SizedBox(height: 2),
-          Text('License: ${list.license}',
-              style: const TextStyle(color: Colors.white38, fontSize: 11)),
+          Text(
+            'License: ${list.license}',
+            style: const TextStyle(color: Colors.white38, fontSize: 11),
+          ),
         ],
       ),
       value: list.enabled,
       onChanged: onToggle,
-      activeColor: Colors.greenAccent,
+      activeThumbColor: Colors.greenAccent,
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
     );
   }
 }
-
 
 // ─── Shared sub-widgets ───────────────────────────────────────────────
 
@@ -1366,15 +1659,21 @@ class _SettingsTile extends StatelessWidget {
         ),
         child: Icon(icon, color: iconColor, size: 20),
       ),
-      title: Text(title,
-          style: const TextStyle(
-              color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500)),
-      subtitle: Text(subtitle,
-          style: const TextStyle(color: Colors.white38, fontSize: 12)),
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      subtitle: Text(
+        subtitle,
+        style: const TextStyle(color: Colors.white38, fontSize: 12),
+      ),
       trailing: trailing,
       onTap: onTap,
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
     );
   }
 }
@@ -1408,9 +1707,8 @@ class _ToggleTile extends StatelessWidget {
       trailing: Switch(
         value: value,
         onChanged: onChanged,
-        activeColor: activeColor,
+        activeThumbColor: activeColor,
       ),
     );
   }
 }
-

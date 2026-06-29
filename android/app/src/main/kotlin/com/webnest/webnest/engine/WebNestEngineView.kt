@@ -51,6 +51,7 @@ class WebNestEngineView(
 
     private val webView: WebView = WebView(context)
     private val methodChannel: MethodChannel
+    private var shieldEnabled: Boolean = true
 
     init {
         // ── Profile isolation via Jetpack WebKit Multi-Profile ────────────────
@@ -64,7 +65,7 @@ class WebNestEngineView(
         }
 
         // ── Creation params ───────────────────────────────────────────────────
-        val shieldEnabled      = creationParams?.get("shieldEnabled") as? Boolean ?: true
+        shieldEnabled = creationParams?.get("shieldEnabled") as? Boolean ?: true
         val desktopMode        = creationParams?.get("desktopMode") as? Boolean ?: false
         val jsEnabled          = creationParams?.get("jsEnabled") as? Boolean ?: true
         val cookiesEnabled     = creationParams?.get("cookiesEnabled") as? Boolean ?: true
@@ -185,7 +186,9 @@ class WebNestEngineView(
             ): WebResourceResponse? {
                 if (shieldEnabled && request != null) {
                     val url = request.url?.toString()
-                    if (WebNestShieldEngine.shouldBlockRequest(url)) {
+                    val blockReason = WebNestShieldEngine.shouldBlockRequest(url)
+                    if (blockReason != null) {
+                        android.util.Log.w("WebNestShield", "Blocked resource $url by rule: $blockReason")
                         blockedCount++
                         webView.post {
                             methodChannel.invokeMethod(
@@ -194,13 +197,25 @@ class WebNestEngineView(
                             )
                         }
                         if (request.isForMainFrame) {
-                            val html = "<html><head><meta name='viewport' content='width=device-width, initial-scale=1.0'></head><body style='background-color:#0F172A;color:white;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;'><h2>Shield Blocked Redirect</h2><p style='color:#ccc'>This page was blocked to protect you.</p></body></html>"
+                            val html = "<html><head><meta name='viewport' content='width=device-width, initial-scale=1.0'></head><body style='background-color:#0F172A;color:white;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;font-family:sans-serif;'><h2>Shield Blocked Redirect</h2><p style='color:#ccc'>Blocked by rule: $blockReason</p></body></html>"
                             return WebResourceResponse("text/html", "UTF-8", ByteArrayInputStream(html.toByteArray()))
                         }
-                        return WebResourceResponse(
-                            "text/plain", "UTF-8",
-                            ByteArrayInputStream("".toByteArray())
-                        )
+                        
+                        val ext = url?.substringAfterLast('.', "")?.substringBefore('?')?.lowercase()
+                        return when (ext) {
+                            "js" -> WebResourceResponse("application/javascript", "UTF-8", ByteArrayInputStream("".toByteArray()))
+                            "css" -> WebResourceResponse("text/css", "UTF-8", ByteArrayInputStream("".toByteArray()))
+                            "png", "jpg", "jpeg", "gif", "webp" -> {
+                                val transparentGif = byteArrayOf(
+                                    0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, 0x80.toByte(), 0x00, 0x00,
+                                    0x00, 0x00, 0x00, 0xFF.toByte(), 0xFF.toByte(), 0xFF.toByte(), 0x21, 0xF9.toByte(), 0x04,
+                                    0x01, 0x00, 0x00, 0x00, 0x00, 0x2C, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00,
+                                    0x00, 0x02, 0x02, 0x44, 0x01, 0x00, 0x3B
+                                )
+                                WebResourceResponse("image/gif", "UTF-8", ByteArrayInputStream(transparentGif))
+                            }
+                            else -> WebResourceResponse("text/plain", "UTF-8", ByteArrayInputStream("".toByteArray()))
+                        }
                     }
                 }
                 return super.shouldInterceptRequest(view, request)
@@ -222,13 +237,17 @@ class WebNestEngineView(
             }
 
             private fun handleUrlOverride(view: WebView?, url: String, hasGesture: Boolean): Boolean {
-                if (shieldEnabled && WebNestShieldEngine.shouldBlockRequest(url)) {
-                    blockedCount++
-                    methodChannel.invokeMethod(
-                        "onResourceBlocked",
-                        mapOf("blockedCount" to blockedCount)
-                    )
-                    return true
+                if (shieldEnabled) {
+                    val blockReason = WebNestShieldEngine.shouldBlockRequest(url)
+                    if (blockReason != null) {
+                        android.util.Log.w("WebNestShield", "Blocked navigation to $url by rule: $blockReason")
+                        blockedCount++
+                        methodChannel.invokeMethod(
+                            "onResourceBlocked",
+                            mapOf("blockedCount" to blockedCount)
+                        )
+                        return true
+                    }
                 }
                 
                 if (openLinksExternally) {
@@ -357,30 +376,48 @@ class WebNestEngineView(
                         override fun shouldOverrideUrlLoading(v: WebView?, request: WebResourceRequest?): Boolean {
                             val url = request?.url?.toString()
                             if (url != null) {
-                                if (shieldEnabled && WebNestShieldEngine.shouldBlockRequest(url)) {
-                                    blockedCount++
-                                    methodChannel.invokeMethod(
-                                        "onResourceBlocked",
-                                        mapOf("blockedCount" to blockedCount)
-                                    )
-                                    return true // Silently block popup ad
+                                if (shieldEnabled) {
+                                    val blockReason = WebNestShieldEngine.shouldBlockRequest(url)
+                                    if (blockReason != null) {
+                                        android.util.Log.w("WebNestShield", "Blocked popup (shouldOverride) to $url by rule: $blockReason")
+                                        blockedCount++
+                                        methodChannel.invokeMethod(
+                                            "onResourceBlocked",
+                                            mapOf("blockedCount" to blockedCount)
+                                        )
+                                        return true // Silently block popup ad
+                                    }
                                 }
-                                this@WebNestEngineView.webView.loadUrl(url)
+                                try {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                    view?.context?.startActivity(intent)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
                             }
                             return true
                         }
                         @Deprecated("Deprecated in Java")
                         override fun shouldOverrideUrlLoading(v: WebView?, url: String?): Boolean {
                             if (url != null) {
-                                if (shieldEnabled && WebNestShieldEngine.shouldBlockRequest(url)) {
-                                    blockedCount++
-                                    methodChannel.invokeMethod(
-                                        "onResourceBlocked",
-                                        mapOf("blockedCount" to blockedCount)
-                                    )
-                                    return true
+                                if (shieldEnabled) {
+                                    val blockReason = WebNestShieldEngine.shouldBlockRequest(url)
+                                    if (blockReason != null) {
+                                        android.util.Log.w("WebNestShield", "Blocked popup (deprecated shouldOverride) to $url by rule: $blockReason")
+                                        blockedCount++
+                                        methodChannel.invokeMethod(
+                                            "onResourceBlocked",
+                                            mapOf("blockedCount" to blockedCount)
+                                        )
+                                        return true
+                                    }
                                 }
-                                this@WebNestEngineView.webView.loadUrl(url)
+                                try {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                    view?.context?.startActivity(intent)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
                             }
                             return true
                         }
@@ -587,6 +624,13 @@ class WebNestEngineView(
             "onResume" -> {
                 webView.onResume()
                 webView.resumeTimers()
+                result.success(null)
+            }
+            "updateSettings" -> {
+                val newShieldEnabled = call.argument<Boolean>("shieldEnabled")
+                if (newShieldEnabled != null) {
+                    shieldEnabled = newShieldEnabled
+                }
                 result.success(null)
             }
             else -> result.notImplemented()

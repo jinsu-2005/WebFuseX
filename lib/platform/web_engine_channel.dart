@@ -110,5 +110,13 @@ class WebEngineChannel {
   static Future<void> clearData(String id) async {
     // Stub
   }
+
+  Future<void> updateSettings({bool? shieldEnabled}) async {
+    final Map<String, dynamic> args = {};
+    if (shieldEnabled != null) args['shieldEnabled'] = shieldEnabled;
+    if (args.isNotEmpty) {
+      await _channel.invokeMethod('updateSettings', args);
+    }
+  }
 }
 

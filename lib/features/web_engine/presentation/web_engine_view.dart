@@ -145,6 +145,14 @@ class _WebEngineViewState extends State<WebEngineView> {
   }
 
   @override
+  void didUpdateWidget(WebEngineView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.shieldEnabled != oldWidget.shieldEnabled) {
+      _channel?.updateSettings(shieldEnabled: widget.shieldEnabled);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     const String viewType = 'webnest_webview';
     final Map<String, dynamic> creationParams = <String, dynamic>{

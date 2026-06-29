@@ -19,6 +19,8 @@ class FilterListUrls {
   static const String uBlockUnbreak = 'https://cdn.jsdelivr.net/gh/uBlockOrigin/uAssetsCDN@main/filters/unbreak.min.txt';
   static const String urlhaus = 'https://malware-filter.gitlab.io/urlhaus-filter/urlhaus-filter-ag-online.txt';
   static const String peterlowelist = 'https://pgl.yoyo.org/adservers/serverlist.php?hostformat=adblockplus&showintro=0&mimetype=plaintext';
+  static const String adguardBase = 'https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_2_Base/filter.txt';
+  static const String adguardMobileAds = 'https://raw.githubusercontent.com/AdguardTeam/FiltersRegistry/master/filters/filter_11_Mobile/filter.txt';
 
   /// All lists that are enabled by default
   static const List<FilterList> defaults = [
@@ -36,6 +38,22 @@ class FilterListUrls {
       url: easyPrivacy,
       description: 'Tracker and privacy protection',
       license: 'CC BY-SA 3.0',
+      enabled: true,
+    ),
+    FilterList(
+      id: 'adguard_base',
+      name: 'AdGuard Base',
+      url: adguardBase,
+      description: 'AdGuard primary ad-blocking filters',
+      license: 'GPL v3',
+      enabled: true,
+    ),
+    FilterList(
+      id: 'adguard_mobile',
+      name: 'AdGuard Mobile Ads',
+      url: adguardMobileAds,
+      description: 'Filters specific to mobile ad networks',
+      license: 'GPL v3',
       enabled: true,
     ),
     FilterList(

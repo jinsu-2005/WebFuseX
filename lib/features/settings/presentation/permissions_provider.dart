@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../website_app/presentation/web_app_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'app_settings_provider.dart';
 
 enum PermissionState { prompt, granted, denied }
 
@@ -40,22 +39,40 @@ class AppPermissions {
 
   Map<String, dynamic> toJson() {
     return {
-      'defaultPermissions': defaultPermissions.map((k, v) => MapEntry(k, v.name)),
-      'sitePermissions': sitePermissions.map((k, v) => MapEntry(k, v.map((k2, v2) => MapEntry(k2, v2.name)))),
+      'defaultPermissions': defaultPermissions.map(
+        (k, v) => MapEntry(k, v.name),
+      ),
+      'sitePermissions': sitePermissions.map(
+        (k, v) => MapEntry(k, v.map((k2, v2) => MapEntry(k2, v2.name))),
+      ),
     };
   }
 
   factory AppPermissions.fromJson(Map<String, dynamic> json) {
-    final dp = (json['defaultPermissions'] as Map<String, dynamic>?)?.map(
-          (k, v) => MapEntry(k, PermissionState.values.firstWhere((e) => e.name == v, orElse: () => PermissionState.prompt)),
+    final dp =
+        (json['defaultPermissions'] as Map<String, dynamic>?)?.map(
+          (k, v) => MapEntry(
+            k,
+            PermissionState.values.firstWhere(
+              (e) => e.name == v,
+              orElse: () => PermissionState.prompt,
+            ),
+          ),
         ) ??
         AppPermissions.initial().defaultPermissions;
 
-    final sp = (json['sitePermissions'] as Map<String, dynamic>?)?.map(
+    final sp =
+        (json['sitePermissions'] as Map<String, dynamic>?)?.map(
           (k, v) => MapEntry(
             k,
             (v as Map<String, dynamic>).map(
-              (k2, v2) => MapEntry(k2, PermissionState.values.firstWhere((e) => e.name == v2, orElse: () => PermissionState.prompt)),
+              (k2, v2) => MapEntry(
+                k2,
+                PermissionState.values.firstWhere(
+                  (e) => e.name == v2,
+                  orElse: () => PermissionState.prompt,
+                ),
+              ),
             ),
           ),
         ) ??
@@ -96,7 +113,9 @@ class PermissionsNotifier extends StateNotifier<AppPermissions> {
   }
 
   void setSitePermission(String origin, String resource, PermissionState s) {
-    final sp = Map<String, Map<String, PermissionState>>.from(state.sitePermissions);
+    final sp = Map<String, Map<String, PermissionState>>.from(
+      state.sitePermissions,
+    );
     final siteMap = Map<String, PermissionState>.from(sp[origin] ?? {});
     siteMap[resource] = s;
     sp[origin] = siteMap;
@@ -104,7 +123,9 @@ class PermissionsNotifier extends StateNotifier<AppPermissions> {
   }
 
   void removeSitePermission(String origin, String resource) {
-    final sp = Map<String, Map<String, PermissionState>>.from(state.sitePermissions);
+    final sp = Map<String, Map<String, PermissionState>>.from(
+      state.sitePermissions,
+    );
     final siteMap = Map<String, PermissionState>.from(sp[origin] ?? {});
     siteMap.remove(resource);
     if (siteMap.isEmpty) {
@@ -124,6 +145,7 @@ class PermissionsNotifier extends StateNotifier<AppPermissions> {
   }
 }
 
-final permissionsProvider = StateNotifierProvider<PermissionsNotifier, AppPermissions>((ref) {
-  return PermissionsNotifier(ref.watch(sharedPreferencesProvider));
-});
+final permissionsProvider =
+    StateNotifierProvider<PermissionsNotifier, AppPermissions>((ref) {
+      return PermissionsNotifier(ref.watch(sharedPreferencesProvider));
+    });

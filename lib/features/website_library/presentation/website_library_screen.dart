@@ -99,7 +99,8 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                      'Pin request sent for "${app.name}". Check your launcher.'),
+                    'Pin request sent for "${app.name}". Check your launcher.',
+                  ),
                   backgroundColor: const Color(0xFF6366F1),
                 ),
               );
@@ -111,9 +112,12 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                 builder: (ctx) => AlertDialog(
                   backgroundColor: const Color(0xFF1E293B),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
-                  title: const Text('Shortcut Pinning Failed',
-                      style: TextStyle(color: Colors.white)),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  title: const Text(
+                    'Shortcut Pinning Failed',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   content: Text(
                     _getShortcutErrorExplanation(status, app.name),
                     style: const TextStyle(color: Colors.white70),
@@ -121,8 +125,10 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(ctx),
-                      child: const Text('OK',
-                          style: TextStyle(color: Color(0xFF6366F1))),
+                      child: const Text(
+                        'OK',
+                        style: TextStyle(color: Color(0xFF6366F1)),
+                      ),
                     ),
                   ],
                 ),
@@ -169,11 +175,15 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                   faviconUrl: app.faviconUrl,
                 );
                 if (status == 'SUCCESS') {
-                  ref.read(webAppNotifierProvider.notifier).markShortcutInstalled(app.id);
+                  ref
+                      .read(webAppNotifierProvider.notifier)
+                      .markShortcutInstalled(app.id);
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('Pin request sent for "${app.name}". Check your launcher.'),
+                        content: Text(
+                          'Pin request sent for "${app.name}". Check your launcher.',
+                        ),
                         backgroundColor: const Color(0xFF6366F1),
                       ),
                     );
@@ -186,7 +196,9 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Storage and cookies cleared for ${app.name}'),
+                      content: Text(
+                        'Storage and cookies cleared for ${app.name}',
+                      ),
                       backgroundColor: Colors.blueAccent,
                     ),
                   );
@@ -199,7 +211,9 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
               onCustomize: () {
                 Navigator.pop(ctx);
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => EditWebsiteScreen(app: app)),
+                  MaterialPageRoute(
+                    builder: (_) => EditWebsiteScreen(app: app),
+                  ),
                 );
               },
             ),
@@ -276,16 +290,20 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel',
-                style: TextStyle(color: Colors.white54)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white54),
+            ),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               ref.read(webAppNotifierProvider.notifier).removeApp(app.id);
             },
-            child:
-                const Text('Remove', style: TextStyle(color: Colors.redAccent)),
+            child: const Text(
+              'Remove',
+              style: TextStyle(color: Colors.redAccent),
+            ),
           ),
         ],
       ),
@@ -320,8 +338,10 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child:
-                const Text('Cancel', style: TextStyle(color: Colors.white54)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white54),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -331,8 +351,10 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                 ref.read(webAppNotifierProvider.notifier).addFolder(name);
               }
             },
-            child: const Text('Create',
-                style: TextStyle(color: Color(0xFF818CF8))),
+            child: const Text(
+              'Create',
+              style: TextStyle(color: Color(0xFF818CF8)),
+            ),
           ),
         ],
       ),
@@ -346,8 +368,10 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF1E293B),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Rename Folder',
-            style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Rename Folder',
+          style: TextStyle(color: Colors.white),
+        ),
         content: TextField(
           controller: ctrl,
           autofocus: true,
@@ -364,8 +388,10 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child:
-                const Text('Cancel', style: TextStyle(color: Colors.white54)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white54),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -377,8 +403,10 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                     .renameFolder(folder.id, name);
               }
             },
-            child: const Text('Save',
-                style: TextStyle(color: Color(0xFF818CF8))),
+            child: const Text(
+              'Save',
+              style: TextStyle(color: Color(0xFF818CF8)),
+            ),
           ),
         ],
       ),
@@ -407,7 +435,8 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Installed "${newApp.name}" and pinned to home screen.'),
+              'Installed "${newApp.name}" and pinned to home screen.',
+            ),
             backgroundColor: const Color(0xFF6366F1),
           ),
         );
@@ -415,7 +444,8 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Installed "${newApp.name}", but shortcut pinning failed.'),
+              'Installed "${newApp.name}", but shortcut pinning failed.',
+            ),
             backgroundColor: Colors.orangeAccent,
           ),
         );
@@ -464,96 +494,124 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                 mainAxisSpacing: 12,
                 childAspectRatio: 0.8,
               ),
-              delegate: SliverChildBuilderDelegate(
-                (context, i) {
-                  final appRuntime = appsInCategory[i];
-                  return _LibraryAppCard(
-                    appRuntime: appRuntime,
-                    onInstall: () async {
-                      final name = appRuntime.config.nameOverride ?? appRuntime.metadata.title;
-                      final favicon = appRuntime.config.faviconOverride ?? appRuntime.metadata.faviconUrl;
-                      final newApp = WebApp(
-                        id: DateTime.now().millisecondsSinceEpoch.toString(),
-                        url: appRuntime.metadata.resolvedUrl,
-                        name: name,
-                        faviconUrl: favicon,
-                        themeColorHex: appRuntime.metadata.themeColorHex,
-                        shortcutInstalled: true,
-                        lastUsed: DateTime.now(),
-                        category: appRuntime.config.categoryId,
-                      );
-                      await ref.read(webAppNotifierProvider.notifier).addApp(newApp);
-                      
-                      final status = await ShortcutChannel.pinShortcut(
-                        appId: newApp.id,
-                        appName: newApp.name,
-                        themeColor: newApp.themeColorHex,
-                        faviconUrl: newApp.faviconUrl,
-                      );
-                      
-                      if (context.mounted) {
-                        if (status == 'SUCCESS') {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.transparent,
-                              content: ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+              delegate: SliverChildBuilderDelegate((context, i) {
+                final appRuntime = appsInCategory[i];
+                return _LibraryAppCard(
+                  appRuntime: appRuntime,
+                  onInstall: () async {
+                    final name =
+                        appRuntime.config.nameOverride ??
+                        appRuntime.metadata.title;
+                    final favicon =
+                        appRuntime.config.faviconOverride ??
+                        appRuntime.metadata.faviconUrl;
+                    final newApp = WebApp(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                      url: appRuntime.metadata.resolvedUrl,
+                      name: name,
+                      faviconUrl: favicon,
+                      themeColorHex: appRuntime.metadata.themeColorHex,
+                      shortcutInstalled: true,
+                      lastUsed: DateTime.now(),
+                      category: appRuntime.config.categoryId,
+                    );
+                    await ref
+                        .read(webAppNotifierProvider.notifier)
+                        .addApp(newApp);
+
+                    final status = await ShortcutChannel.pinShortcut(
+                      appId: newApp.id,
+                      appName: newApp.name,
+                      themeColor: newApp.themeColorHex,
+                      faviconUrl: newApp.faviconUrl,
+                    );
+
+                    if (context.mounted) {
+                      if (status == 'SUCCESS') {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            elevation: 0,
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.transparent,
+                            content: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(
+                                  sigmaX: 10,
+                                  sigmaY: 10,
+                                ),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.2,
+                                      ),
                                     ),
-                                    child: Text(
-                                      'Installed "${newApp.name}" and pinned to home screen.',
-                                      style: const TextStyle(color: Colors.white),
-                                    ),
+                                  ),
+                                  child: Text(
+                                    'Installed "${newApp.name}" and pinned to home screen.',
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
                               ),
                             ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              elevation: 0,
-                              behavior: SnackBarBehavior.floating,
-                              backgroundColor: Colors.transparent,
-                              content: ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                    decoration: BoxDecoration(
-                                      color: Colors.redAccent.withValues(alpha: 0.2),
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(color: Colors.redAccent.withValues(alpha: 0.3)),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            elevation: 0,
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Colors.transparent,
+                            content: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(
+                                  sigmaX: 10,
+                                  sigmaY: 10,
+                                ),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.redAccent.withValues(
+                                      alpha: 0.2,
                                     ),
-                                    child: Text(
-                                      'Installed "${newApp.name}", but shortcut pinning failed.',
-                                      style: const TextStyle(color: Colors.white),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: Colors.redAccent.withValues(
+                                        alpha: 0.3,
+                                      ),
                                     ),
+                                  ),
+                                  child: Text(
+                                    'Installed "${newApp.name}", but shortcut pinning failed.',
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
                               ),
                             ),
-                          );
-                        }
+                          ),
+                        );
                       }
-                    },
-                    onLaunch: () {
-                      context.push('/session/temp_${appRuntime.config.id}', extra: appRuntime.metadata.resolvedUrl);
-                    },
-                  );
-                },
-                childCount: appsInCategory.length,
-              ),
+                    }
+                  },
+                  onLaunch: () {
+                    context.push(
+                      '/session/temp_${appRuntime.config.id}',
+                      extra: appRuntime.metadata.resolvedUrl,
+                    );
+                  },
+                );
+              }, childCount: appsInCategory.length),
             ),
           ),
         );
@@ -572,26 +630,34 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
     final defaultCategories = ref.watch(defaultLibraryCategoriesProvider);
 
     final allApps = libraryState.apps;
-    final favorites = _selectedCategoryName == null ? libraryState.favorites : <WebApp>[];
-    final recentlyUsed = _selectedCategoryName == null ? libraryState.recentlyUsed : <WebApp>[];
-    final folders = _selectedCategoryName == null ? libraryState.sortedFolders : <WebAppFolder>[];
+    final favorites = _selectedCategoryName == null
+        ? libraryState.favorites
+        : <WebApp>[];
+    final recentlyUsed = _selectedCategoryName == null
+        ? libraryState.recentlyUsed
+        : <WebApp>[];
+    final folders = _selectedCategoryName == null
+        ? libraryState.sortedFolders
+        : <WebAppFolder>[];
     final rootApps = _selectedCategoryName == null
         ? libraryState.rootApps
-        : libraryState.apps.where((a) => a.category == _selectedCategoryName).toList();
+        : libraryState.apps
+              .where((a) => a.category == _selectedCategoryName)
+              .toList();
 
     final displayedApps = _searchQuery.isEmpty
         ? allApps
         : allApps
-            .where((a) =>
-                (a.customDisplayName.isNotEmpty
-                        ? a.customDisplayName
-                        : a.name)
-                    .toLowerCase()
-                    .contains(_searchQuery.toLowerCase()) ||
-                a.url
-                    .toLowerCase()
-                    .contains(_searchQuery.toLowerCase()))
-            .toList();
+              .where(
+                (a) =>
+                    (a.customDisplayName.isNotEmpty
+                            ? a.customDisplayName
+                            : a.name)
+                        .toLowerCase()
+                        .contains(_searchQuery.toLowerCase()) ||
+                    a.url.toLowerCase().contains(_searchQuery.toLowerCase()),
+              )
+              .toList();
 
     return Scaffold(
       body: Container(
@@ -599,10 +665,7 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF0F172A),
-              Color(0xFF13111E),
-            ],
+            colors: [Color(0xFF0F172A), Color(0xFF13111E)],
           ),
         ),
         child: SafeArea(
@@ -657,23 +720,19 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                             icon: Icons.tune_rounded,
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) =>
-                                    const AdvancedSettingsScreen(),
+                                builder: (_) => const AdvancedSettingsScreen(),
                               ),
                             ),
                           ),
                           const SizedBox(width: 8),
                           // Add button (header)
-                          _AddButton(
-                            onTap: () => context.push('/add'),
-                          ),
+                          _AddButton(onTap: () => context.push('/add')),
                         ],
                       ),
                       const SizedBox(height: 20),
                       _SearchBar(
                         controller: _searchController,
-                        onChanged: (q) =>
-                            setState(() => _searchQuery = q),
+                        onChanged: (q) => setState(() => _searchQuery = q),
                       ),
                       const SizedBox(height: 8),
                     ],
@@ -687,7 +746,8 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                   child: _CategoryTabBar(
                     categories: libraryState.sortedCategories,
                     selectedCategoryName: _selectedCategoryName,
-                    onCategorySelected: (cat) => setState(() => _selectedCategoryName = cat),
+                    onCategorySelected: (cat) =>
+                        setState(() => _selectedCategoryName = cat),
                     onManageCategories: _showCategoryManagerDialog,
                   ),
                 ),
@@ -715,7 +775,6 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                   ),
                 ),
               ]
-
               // -- Normal mode --
               else ...[
                 // Empty state
@@ -739,8 +798,7 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                         height: 104,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           itemCount: favorites.length,
                           separatorBuilder: (context, index) =>
                               const SizedBox(width: 12),
@@ -753,8 +811,7 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                         ),
                       ),
                     ),
-                    const SliverToBoxAdapter(
-                        child: SizedBox(height: 8)),
+                    const SliverToBoxAdapter(child: SizedBox(height: 8)),
                   ],
 
                   // Recently Used
@@ -769,8 +826,7 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                         height: 80,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
                           itemCount: recentlyUsed.length,
                           separatorBuilder: (context, index) =>
                               const SizedBox(width: 12),
@@ -781,14 +837,12 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                         ),
                       ),
                     ),
-                    const SliverToBoxAdapter(
-                        child: SizedBox(height: 8)),
+                    const SliverToBoxAdapter(child: SizedBox(height: 8)),
                   ],
 
                   // -- Folders --
                   ...folders.expand((folder) {
-                    final folderApps =
-                        libraryState.appsInFolder(folder.id);
+                    final folderApps = libraryState.appsInFolder(folder.id);
                     return [
                       SliverToBoxAdapter(
                         child: _FolderHeader(
@@ -797,17 +851,19 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                           onToggleExpand: () => ref
                               .read(webAppNotifierProvider.notifier)
                               .toggleFolderExpanded(folder.id),
-                          onRename: () =>
-                              _showRenameFolderDialog(folder),
+                          onRename: () => _showRenameFolderDialog(folder),
                           onDelete: () {
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 backgroundColor: const Color(0xFF1E293B),
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16)),
-                                title: const Text('Delete Folder?',
-                                    style: TextStyle(color: Colors.white)),
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                title: const Text(
+                                  'Delete Folder?',
+                                  style: TextStyle(color: Colors.white),
+                                ),
                                 content: const Text(
                                   'Apps inside this folder will be moved back to the main list.',
                                   style: TextStyle(color: Colors.white70),
@@ -815,21 +871,22 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx),
-                                    child: const Text('Cancel',
-                                        style: TextStyle(
-                                            color: Colors.white54)),
+                                    child: const Text(
+                                      'Cancel',
+                                      style: TextStyle(color: Colors.white54),
+                                    ),
                                   ),
                                   TextButton(
                                     onPressed: () {
                                       Navigator.pop(ctx);
                                       ref
-                                          .read(webAppNotifierProvider
-                                              .notifier)
+                                          .read(webAppNotifierProvider.notifier)
                                           .removeFolder(folder.id);
                                     },
-                                    child: const Text('Delete',
-                                        style: TextStyle(
-                                            color: Colors.redAccent)),
+                                    child: const Text(
+                                      'Delete',
+                                      style: TextStyle(color: Colors.redAccent),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -839,8 +896,7 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                       ),
                       if (folder.isExpanded && folderApps.isNotEmpty)
                         SliverPadding(
-                          padding:
-                              const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                           sliver: _AppGrid(
                             apps: folderApps,
                             onTap: _launchApp,
@@ -854,12 +910,14 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                   // My Apps section header with "Add" and "New Folder" at top
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding:
-                          const EdgeInsets.fromLTRB(24, 20, 16, 8),
+                      padding: const EdgeInsets.fromLTRB(24, 20, 16, 8),
                       child: Row(
                         children: [
-                          const Icon(Icons.apps_rounded,
-                              color: Color(0xFF818CF8), size: 18),
+                          const Icon(
+                            Icons.apps_rounded,
+                            color: Color(0xFF818CF8),
+                            size: 18,
+                          ),
                           const SizedBox(width: 8),
                           const Text(
                             'MY APPS',
@@ -874,14 +932,23 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                           // New Folder button
                           TextButton.icon(
                             onPressed: _showCreateFolderDialog,
-                            icon: const Icon(Icons.create_new_folder_outlined,
-                                size: 16, color: Colors.white38),
-                            label: const Text('New Folder',
-                                style: TextStyle(
-                                    color: Colors.white38, fontSize: 12)),
+                            icon: const Icon(
+                              Icons.create_new_folder_outlined,
+                              size: 16,
+                              color: Colors.white38,
+                            ),
+                            label: const Text(
+                              'New Folder',
+                              style: TextStyle(
+                                color: Colors.white38,
+                                fontSize: 12,
+                              ),
+                            ),
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
                             ),
                           ),
                         ],
@@ -893,20 +960,17 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                      child: _AddWebsiteCard(
-                          onTap: () => context.push('/add')),
+                      child: _AddWebsiteCard(onTap: () => context.push('/add')),
                     ),
                   ),
 
                   // Root apps grid (drag-and-drop)
                   SliverPadding(
-                    padding:
-                        const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                     sliver: _DraggableAppGrid(
                       apps: rootApps,
                       onTap: _launchApp,
-                      onLongPress: (app) =>
-                          _showContextMenu(context, app),
+                      onLongPress: (app) => _showContextMenu(context, app),
                       onReorder: (newOrder) => ref
                           .read(webAppNotifierProvider.notifier)
                           .reorderApps(newOrder),
@@ -916,28 +980,33 @@ class _WebsiteLibraryScreenState extends ConsumerState<WebsiteLibraryScreen> {
 
                 // Default Website Library Section
                 const SliverToBoxAdapter(child: SizedBox(height: 16)),
-                  _SectionHeader(
-                    icon: Icons.explore_rounded,
-                    label: 'Default Library',
-                    iconColor: const Color(0xFF34D399),
-                  ),
+                _SectionHeader(
+                  icon: Icons.explore_rounded,
+                  label: 'Default Library',
+                  iconColor: const Color(0xFF34D399),
+                ),
 
-                  // Categories render immediately
-                  ..._buildDefaultLibrarySlivers(
-                    defaultLibraryAsync, 
-                    _selectedCategoryName == null
+                // Categories render immediately
+                ..._buildDefaultLibrarySlivers(
+                  defaultLibraryAsync,
+                  _selectedCategoryName == null
                       ? defaultCategories
                       : defaultCategories.where((dc) {
-                          final selectedCatObj = libraryState.sortedCategories.firstWhere(
-                            (c) => c.name == _selectedCategoryName, 
-                            orElse: () => const WebAppCategory(id: '', name: '', emoji: '', sortOrder: 0)
-                          );
+                          final selectedCatObj = libraryState.sortedCategories
+                              .firstWhere(
+                                (c) => c.name == _selectedCategoryName,
+                                orElse: () => const WebAppCategory(
+                                  id: '',
+                                  name: '',
+                                  emoji: '',
+                                  sortOrder: 0,
+                                ),
+                              );
                           return dc.id == selectedCatObj.id;
                         }).toList(),
-                  ),
+                ),
 
-                  const SliverToBoxAdapter(
-                      child: SizedBox(height: 80)),
+                const SliverToBoxAdapter(child: SizedBox(height: 80)),
               ],
             ],
           ),
@@ -1023,8 +1092,7 @@ class _FolderHeader extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.04),
             borderRadius: BorderRadius.circular(12),
-            border:
-                Border.all(color: Colors.white.withValues(alpha: 0.08)),
+            border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
           ),
           child: Row(
             children: [
@@ -1048,20 +1116,20 @@ class _FolderHeader extends StatelessWidget {
               ),
               Text(
                 '$appCount app${appCount == 1 ? '' : 's'}',
-                style:
-                    const TextStyle(color: Colors.white38, fontSize: 12),
+                style: const TextStyle(color: Colors.white38, fontSize: 12),
               ),
               const SizedBox(width: 8),
               Icon(
-                folder.isExpanded
-                    ? Icons.expand_less
-                    : Icons.expand_more,
+                folder.isExpanded ? Icons.expand_less : Icons.expand_more,
                 color: Colors.white38,
                 size: 20,
               ),
               PopupMenuButton<String>(
-                icon: const Icon(Icons.more_horiz,
-                    color: Colors.white38, size: 18),
+                icon: const Icon(
+                  Icons.more_horiz,
+                  color: Colors.white38,
+                  size: 18,
+                ),
                 color: const Color(0xFF1E293B),
                 onSelected: (value) {
                   if (value == 'rename') onRename();
@@ -1070,13 +1138,17 @@ class _FolderHeader extends StatelessWidget {
                 itemBuilder: (_) => [
                   const PopupMenuItem(
                     value: 'rename',
-                    child: Text('Rename',
-                        style: TextStyle(color: Colors.white)),
+                    child: Text(
+                      'Rename',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                   const PopupMenuItem(
                     value: 'delete',
-                    child: Text('Delete',
-                        style: TextStyle(color: Colors.redAccent)),
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(color: Colors.redAccent),
+                    ),
                   ),
                 ],
               ),
@@ -1166,22 +1238,18 @@ class _DraggableAppGrid extends StatelessWidget {
             child: Opacity(
               opacity: 0.85,
               child: SizedBox(
-                width: (MediaQuery.of(context).size.width - 32 - (count - 1) * 12) / count,
-                child: _AppCard(
-                  app: apps[i],
-                  onTap: () {},
-                  onLongPress: () {},
-                ),
+                width:
+                    (MediaQuery.of(context).size.width -
+                        32 -
+                        (count - 1) * 12) /
+                    count,
+                child: _AppCard(app: apps[i], onTap: () {}, onLongPress: () {}),
               ),
             ),
           ),
           childWhenDragging: Opacity(
             opacity: 0.3,
-            child: _AppCard(
-              app: apps[i],
-              onTap: () {},
-              onLongPress: () {},
-            ),
+            child: _AppCard(app: apps[i], onTap: () {}, onLongPress: () {}),
           ),
           onDragEnd: (_) {},
           child: DragTarget<String>(
@@ -1203,10 +1271,7 @@ class _DraggableAppGrid extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(18),
                   border: isTarget
-                      ? Border.all(
-                          color: const Color(0xFF818CF8),
-                          width: 2,
-                        )
+                      ? Border.all(color: const Color(0xFF818CF8), width: 2)
                       : null,
                 ),
                 child: _AppCard(
@@ -1271,10 +1336,7 @@ class _FeaturedAppTile extends StatelessWidget {
   final WebApp app;
   final VoidCallback onInstall;
 
-  const _FeaturedAppTile({
-    required this.app,
-    required this.onInstall,
-  });
+  const _FeaturedAppTile({required this.app, required this.onInstall});
 
   @override
   Widget build(BuildContext context) {
@@ -1324,10 +1386,7 @@ class _FeaturedAppTile extends StatelessWidget {
                 Text(
                   Uri.tryParse(app.url)?.host.replaceFirst('www.', '') ??
                       app.url,
-                  style: const TextStyle(
-                    color: Colors.white54,
-                    fontSize: 12,
-                  ),
+                  style: const TextStyle(color: Colors.white54, fontSize: 12),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -1340,8 +1399,7 @@ class _FeaturedAppTile extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF6366F1),
               foregroundColor: Colors.white,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -1390,7 +1448,9 @@ class _AppCardState extends State<_AppCard> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
-            color: _isHovered ? Colors.white.withValues(alpha: 0.08) : Colors.white.withValues(alpha: 0.04),
+            color: _isHovered
+                ? Colors.white.withValues(alpha: 0.08)
+                : Colors.white.withValues(alpha: 0.04),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
           ),
@@ -1414,7 +1474,11 @@ class _AppCardState extends State<_AppCard> {
                               widget.app.faviconUrl,
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) =>
-                                  Icon(Icons.language, color: themeColor, size: 24),
+                                  Icon(
+                                    Icons.language,
+                                    color: themeColor,
+                                    size: 24,
+                                  ),
                             ),
                           )
                         : Icon(Icons.language, color: themeColor, size: 24),
@@ -1424,8 +1488,8 @@ class _AppCardState extends State<_AppCard> {
                     widget.app.customDisplayName.isNotEmpty
                         ? widget.app.customDisplayName
                         : (widget.app.customShortName.isNotEmpty
-                            ? widget.app.customShortName
-                            : widget.app.name),
+                              ? widget.app.customShortName
+                              : widget.app.name),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 13,
@@ -1482,7 +1546,6 @@ class _LibraryAppCard extends StatelessWidget {
   final VoidCallback onLaunch;
 
   const _LibraryAppCard({
-    super.key,
     required this.appRuntime,
     required this.onInstall,
     required this.onLaunch,
@@ -1493,12 +1556,21 @@ class _LibraryAppCard extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF1E293B),
-        title: Text('Install ${appRuntime.metadata.title}?', style: const TextStyle(color: Colors.white)),
-        content: const Text('Do you want to install and pin this app to your home screen?', style: TextStyle(color: Colors.white70)),
+        title: Text(
+          'Install ${appRuntime.metadata.title}?',
+          style: const TextStyle(color: Colors.white),
+        ),
+        content: const Text(
+          'Do you want to install and pin this app to your home screen?',
+          style: TextStyle(color: Colors.white70),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel', style: TextStyle(color: Colors.white54)),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.white54),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -1537,7 +1609,10 @@ class _LibraryAppCard extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.download_rounded, color: Colors.white),
-              title: const Text('Install & Pin', style: TextStyle(color: Colors.white)),
+              title: const Text(
+                'Install & Pin',
+                style: TextStyle(color: Colors.white),
+              ),
               onTap: () {
                 Navigator.pop(ctx);
                 onInstall();
@@ -1548,23 +1623,37 @@ class _LibraryAppCard extends StatelessWidget {
               title: const Text('Share', style: TextStyle(color: Colors.white)),
               onTap: () {
                 Navigator.pop(ctx);
-                Share.share(appRuntime.metadata.resolvedUrl, subject: appRuntime.metadata.title);
+                Share.share(
+                  appRuntime.metadata.resolvedUrl,
+                  subject: appRuntime.metadata.title,
+                );
               },
             ),
             ListTile(
               leading: const Icon(Icons.copy, color: Colors.white),
-              title: const Text('Copy URL', style: TextStyle(color: Colors.white)),
+              title: const Text(
+                'Copy URL',
+                style: TextStyle(color: Colors.white),
+              ),
               onTap: () {
                 Navigator.pop(ctx);
-                Clipboard.setData(ClipboardData(text: appRuntime.metadata.resolvedUrl));
+                Clipboard.setData(
+                  ClipboardData(text: appRuntime.metadata.resolvedUrl),
+                );
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('URL copied to clipboard')),
                 );
               },
             ),
             ListTile(
-              leading: const Icon(Icons.add_to_home_screen, color: Colors.white),
-              title: const Text('Create Home Screen Shortcut', style: TextStyle(color: Colors.white)),
+              leading: const Icon(
+                Icons.add_to_home_screen,
+                color: Colors.white,
+              ),
+              title: const Text(
+                'Create Home Screen Shortcut',
+                style: TextStyle(color: Colors.white),
+              ),
               onTap: () {
                 Navigator.pop(ctx);
                 ShortcutChannel.pinShortcut(
@@ -1598,7 +1687,9 @@ class _LibraryAppCard extends StatelessWidget {
               color: Colors.white.withValues(alpha: 0.04),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: appRuntime.config.isFeatured ? const Color(0xFFFBBF24).withValues(alpha: 0.5) : Colors.white.withValues(alpha: 0.07),
+                color: appRuntime.config.isFeatured
+                    ? const Color(0xFFFBBF24).withValues(alpha: 0.5)
+                    : Colors.white.withValues(alpha: 0.07),
                 width: appRuntime.config.isFeatured ? 1.5 : 1.0,
               ),
             ),
@@ -1619,8 +1710,11 @@ class _LibraryAppCard extends StatelessWidget {
                         ? Image.network(
                             appRuntime.metadata.faviconUrl,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Icon(Icons.language, color: themeColor, size: 24),
+                            errorBuilder: (context, error, stackTrace) => Icon(
+                              Icons.language,
+                              color: themeColor,
+                              size: 24,
+                            ),
                           )
                         : Icon(Icons.language, color: themeColor, size: 24),
                   ),
@@ -1630,7 +1724,11 @@ class _LibraryAppCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(
                     appRuntime.metadata.title,
-                    style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
                     maxLines: 1,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
@@ -1643,17 +1741,28 @@ class _LibraryAppCard extends StatelessWidget {
                     runSpacing: 4,
                     alignment: WrapAlignment.center,
                     children: appRuntime.config.badges.map((badge) {
-                      final isSubDub = badge.toLowerCase().contains('sub') || badge.toLowerCase().contains('dub');
-                      final badgeColor = isSubDub ? Colors.blueAccent : themeColor;
+                      final isSubDub =
+                          badge.toLowerCase().contains('sub') ||
+                          badge.toLowerCase().contains('dub');
+                      final badgeColor = isSubDub
+                          ? Colors.blueAccent
+                          : themeColor;
                       return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
                         decoration: BoxDecoration(
                           color: badgeColor.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           badge,
-                          style: TextStyle(color: badgeColor, fontSize: 9, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            color: badgeColor,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       );
                     }).toList(),
@@ -1687,18 +1796,20 @@ class _LibraryAppCard extends StatelessWidget {
           Positioned(
             top: 4,
             right: 4,
-            child: appRuntime.config.isFeatured ? const SizedBox() : GestureDetector(
-              onTap: () => _showContextMenu(context),
-              behavior: HitTestBehavior.opaque,
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Icon(
-                  Icons.more_vert_rounded,
-                  size: 16,
-                  color: Colors.white.withValues(alpha: 0.3),
-                ),
-              ),
-            ),
+            child: appRuntime.config.isFeatured
+                ? const SizedBox()
+                : GestureDetector(
+                    onTap: () => _showContextMenu(context),
+                    behavior: HitTestBehavior.opaque,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Icon(
+                        Icons.more_vert_rounded,
+                        size: 16,
+                        color: Colors.white.withValues(alpha: 0.3),
+                      ),
+                    ),
+                  ),
           ),
         ],
       ),
@@ -1767,7 +1878,9 @@ class _AppContextMenu extends StatelessWidget {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: _parseColor(app.themeColorHex).withValues(alpha: 0.15),
+                      color: _parseColor(
+                        app.themeColorHex,
+                      ).withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: app.faviconUrl.isNotEmpty
@@ -1776,11 +1889,18 @@ class _AppContextMenu extends StatelessWidget {
                             child: Image.network(
                               app.faviconUrl,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) =>
-                                  Icon(Icons.language, color: _parseColor(app.themeColorHex), size: 20),
+                              errorBuilder: (_, __, ___) => Icon(
+                                Icons.language,
+                                color: _parseColor(app.themeColorHex),
+                                size: 20,
+                              ),
                             ),
                           )
-                        : Icon(Icons.language, color: _parseColor(app.themeColorHex), size: 20),
+                        : Icon(
+                            Icons.language,
+                            color: _parseColor(app.themeColorHex),
+                            size: 20,
+                          ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -1788,14 +1908,23 @@ class _AppContextMenu extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          app.customDisplayName.isNotEmpty ? app.customDisplayName : app.name,
-                          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                          app.customDisplayName.isNotEmpty
+                              ? app.customDisplayName
+                              : app.name,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           Uri.tryParse(app.url)?.host ?? app.url,
-                          style: const TextStyle(color: Colors.white38, fontSize: 12),
+                          style: const TextStyle(
+                            color: Colors.white38,
+                            fontSize: 12,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -1816,7 +1945,9 @@ class _AppContextMenu extends StatelessWidget {
             ListTile(
               leading: Icon(
                 app.isFavorite ? Icons.star_rounded : Icons.star_border_rounded,
-                color: app.isFavorite ? const Color(0xFFFBBF24) : Colors.white70,
+                color: app.isFavorite
+                    ? const Color(0xFFFBBF24)
+                    : Colors.white70,
               ),
               title: Text(
                 app.isFavorite ? 'Remove from Favorites' : 'Add to Favorites',
@@ -1834,82 +1965,151 @@ class _AppContextMenu extends StatelessWidget {
             // Copy URL
             ListTile(
               leading: const Icon(Icons.copy_rounded, color: Colors.white70),
-              title: const Text('Copy URL', style: TextStyle(color: Colors.white)),
+              title: const Text(
+                'Copy URL',
+                style: TextStyle(color: Colors.white),
+              ),
               onTap: onCopyUrl,
             ),
             const Divider(color: Colors.white12, height: 1, indent: 56),
             // WebApp Settings (Local Configuration)
             ListTile(
-              leading: const Icon(Icons.settings_rounded, color: Color(0xFF818CF8)),
-              title: const Text('WebApp Settings', style: TextStyle(color: Colors.white)),
-              subtitle: const Text('Local overrides, auto-refresh, actions', style: TextStyle(color: Colors.white38, fontSize: 11)),
+              leading: const Icon(
+                Icons.settings_rounded,
+                color: Color(0xFF818CF8),
+              ),
+              title: const Text(
+                'WebApp Settings',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: const Text(
+                'Local overrides, auto-refresh, actions',
+                style: TextStyle(color: Colors.white38, fontSize: 11),
+              ),
               onTap: onLocalConfiguration,
             ),
             // Customize
             ListTile(
               leading: const Icon(Icons.edit_outlined, color: Colors.white70),
-              title: const Text('Customize', style: TextStyle(color: Colors.white)),
-              subtitle: const Text('Change name, icon, short name', style: TextStyle(color: Colors.white38, fontSize: 11)),
+              title: const Text(
+                'Customize',
+                style: TextStyle(color: Colors.white),
+              ),
+              subtitle: const Text(
+                'Change name, icon, short name',
+                style: TextStyle(color: Colors.white38, fontSize: 11),
+              ),
               onTap: onEdit,
             ),
             // Pin Shortcut
             ListTile(
-              leading: const Icon(Icons.add_to_home_screen, color: Colors.amberAccent),
-              title: const Text('Pin to Home Screen', style: TextStyle(color: Colors.white)),
+              leading: const Icon(
+                Icons.add_to_home_screen,
+                color: Colors.amberAccent,
+              ),
+              title: const Text(
+                'Pin to Home Screen',
+                style: TextStyle(color: Colors.white),
+              ),
               onTap: onPinShortcut,
             ),
             const Divider(color: Colors.white12, height: 1, indent: 56),
             // Move to Folder
             if (folders.isNotEmpty)
               ExpansionTile(
-                leading: const Icon(Icons.folder_rounded, color: Colors.white70),
-                title: const Text('Move to Folder', style: TextStyle(color: Colors.white)),
+                leading: const Icon(
+                  Icons.folder_rounded,
+                  color: Colors.white70,
+                ),
+                title: const Text(
+                  'Move to Folder',
+                  style: TextStyle(color: Colors.white),
+                ),
                 iconColor: Colors.white38,
                 collapsedIconColor: Colors.white38,
                 children: [
                   ListTile(
                     leading: const SizedBox(width: 24),
-                    title: const Text('(No Folder / Root)', style: TextStyle(color: Colors.white54)),
+                    title: const Text(
+                      '(No Folder / Root)',
+                      style: TextStyle(color: Colors.white54),
+                    ),
                     onTap: () => onMoveToFolder?.call(''),
                   ),
-                  ...folders.map((f) => ListTile(
-                        leading: const SizedBox(width: 24),
-                        title: Text(f.name, style: const TextStyle(color: Colors.white)),
-                        trailing: app.folderId == f.id
-                            ? const Icon(Icons.check, color: Color(0xFF818CF8), size: 18)
-                            : null,
-                        onTap: () => onMoveToFolder?.call(f.id),
-                      )),
+                  ...folders.map(
+                    (f) => ListTile(
+                      leading: const SizedBox(width: 24),
+                      title: Text(
+                        f.name,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      trailing: app.folderId == f.id
+                          ? const Icon(
+                              Icons.check,
+                              color: Color(0xFF818CF8),
+                              size: 18,
+                            )
+                          : null,
+                      onTap: () => onMoveToFolder?.call(f.id),
+                    ),
+                  ),
                 ],
               ),
             // Set Category
             if (categories != null && categories!.isNotEmpty)
               ExpansionTile(
                 leading: const Icon(Icons.label_rounded, color: Colors.white70),
-                title: const Text('Set Category', style: TextStyle(color: Colors.white)),
+                title: const Text(
+                  'Set Category',
+                  style: TextStyle(color: Colors.white),
+                ),
                 iconColor: Colors.white38,
                 collapsedIconColor: Colors.white38,
                 children: [
                   ListTile(
                     leading: const SizedBox(width: 24),
-                    title: const Text('(No Category)', style: TextStyle(color: Colors.white54)),
+                    title: const Text(
+                      '(No Category)',
+                      style: TextStyle(color: Colors.white54),
+                    ),
                     onTap: () => onSetCategory?.call(''),
                   ),
-                  ...categories!.map((c) => ListTile(
-                        leading: SizedBox(width: 24, child: Text(c.emoji, style: const TextStyle(fontSize: 16))),
-                        title: Text(c.name, style: const TextStyle(color: Colors.white)),
-                        trailing: app.category == c.name
-                            ? const Icon(Icons.check, color: Color(0xFF818CF8), size: 18)
-                            : null,
-                        onTap: () => onSetCategory?.call(c.name),
-                      )),
+                  ...categories!.map(
+                    (c) => ListTile(
+                      leading: SizedBox(
+                        width: 24,
+                        child: Text(
+                          c.emoji,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      title: Text(
+                        c.name,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      trailing: app.category == c.name
+                          ? const Icon(
+                              Icons.check,
+                              color: Color(0xFF818CF8),
+                              size: 18,
+                            )
+                          : null,
+                      onTap: () => onSetCategory?.call(c.name),
+                    ),
+                  ),
                 ],
               ),
             const Divider(color: Colors.white12, height: 1, indent: 56),
             // Delete
             ListTile(
-              leading: const Icon(Icons.delete_outline, color: Colors.redAccent),
-              title: const Text('Remove App', style: TextStyle(color: Colors.redAccent)),
+              leading: const Icon(
+                Icons.delete_outline,
+                color: Colors.redAccent,
+              ),
+              title: const Text(
+                'Remove App',
+                style: TextStyle(color: Colors.redAccent),
+              ),
               onTap: onDelete,
             ),
             const SizedBox(height: 8),
@@ -1927,11 +2127,7 @@ class _CategoryManagerSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
-      child: Center(
-        child: Text('Category Manager'),
-      ),
-    );
+    return const SafeArea(child: Center(child: Text('Category Manager')));
   }
 }
 
@@ -1990,7 +2186,10 @@ class _SearchBar extends StatelessWidget {
       decoration: InputDecoration(
         hintText: 'Search...',
         hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
-        prefixIcon: Icon(Icons.search, color: Colors.white.withValues(alpha: 0.5)),
+        prefixIcon: Icon(
+          Icons.search,
+          color: Colors.white.withValues(alpha: 0.5),
+        ),
         filled: true,
         fillColor: Colors.white.withValues(alpha: 0.1),
         border: OutlineInputBorder(
@@ -2028,14 +2227,16 @@ class _CategoryTabBar extends StatelessWidget {
             selected: selectedCategoryName == null,
             onSelected: (_) => onCategorySelected(null),
           ),
-          ...categories.map((c) => Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: FilterChip(
-              label: Text(c.name),
-              selected: selectedCategoryName == c.name,
-              onSelected: (_) => onCategorySelected(c.name),
+          ...categories.map(
+            (c) => Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: FilterChip(
+                label: Text(c.name),
+                selected: selectedCategoryName == c.name,
+                onSelected: (_) => onCategorySelected(c.name),
+              ),
             ),
-          )),
+          ),
         ],
       ),
     );
@@ -2060,10 +2261,7 @@ class _EmptyState extends StatelessWidget {
           const Text('No apps found', style: TextStyle(color: Colors.white70)),
           if (onAdd != null) ...[
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: onAdd,
-              child: const Text('Add App'),
-            ),
+            ElevatedButton(onPressed: onAdd, child: const Text('Add App')),
           ],
         ],
       ),
